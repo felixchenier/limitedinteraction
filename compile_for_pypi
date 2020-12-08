@@ -1,0 +1,3 @@
+rm -fR dist
+rm -fR build
+python setup.py sdist bdist_wheel

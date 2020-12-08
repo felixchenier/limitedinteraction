@@ -22,9 +22,6 @@ This module provides simple GUI tools that run in their own process, so that it 
 conflict with the current running event loop. It has no external dependency, and updates
 the matplotlib event loop in background (if matplotlib is installed) while waiting for
 user action.
-
-Current tools include:
-    - button_dialog(): a request to select an option by clicking on one button.
 """
 
 __author__ = "Félix Chénier"
