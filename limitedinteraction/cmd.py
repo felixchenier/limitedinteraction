@@ -63,17 +63,28 @@ def get_window_geometry(root):
     return (width, height, left, top)
 
 
-def center_window(root):
-    """Center the root window on screen."""
+def place_window(root, **kwargs):
+    """Place window in screen."""
     (width, height, left, top) = get_window_geometry(root)
-    root.geometry('%dx%d+%d+%d' % (
-                  width, height,
-                  root.winfo_screenwidth()/2-width/2,
-                  root.winfo_screenheight()/2-height/2))
+
+    if width < kwargs['min_width']:
+        width = kwargs['min_width']
+    if width < kwargs['min_height']:
+        height = kwargs['min_height']
+    if 'left' in kwargs:
+        left = kwargs['left']
+    else:
+        left = int(root.winfo_screenwidth() / 2 - width / 2)  # center
+    if 'top' in kwargs:
+        top = kwargs['top']
+    else:
+        top = int(root.winfo_screenheight() / 2 - height / 2)  # center
+
+    root.geometry(f'{width}x{height}+{left}+{top}')
 
 
 def show_window(root):
-    """Show the window (remove transparency)"""
+    """Show the window (remove transparency)."""
     # Unhide the window
     root.wm_attributes("-alpha", 1)
     root.attributes("-alpha", 1)
@@ -97,10 +108,28 @@ def button_dialog(root, frame, **kwargs):
         btn.pack(fill=tk.X)
         ichoice = ichoice + 1
 
-    center_window(root)
+    place_window(root, **kwargs)
     show_window(root)
     root.mainloop()
     return selected_choice[0]
+
+
+def message(root, frame, **kwargs):
+    """Terminate composing the GUI and draw until flagfile is deleted."""
+    place_window(root, **kwargs)
+    show_window(root)
+
+    def check_if_file_exists(file):
+        try:
+            fid = open(file, 'r')
+        except FileNotFoundError:
+            return False
+        fid.close()
+        return True
+
+    while check_if_file_exists(kwargs['flagfile']):
+        root.update()
+        time.sleep(0.2)
 
 
 def get_folder(root, **kwargs):
@@ -132,13 +161,17 @@ if __name__ == '__main__':
     kwargs = json.loads(sys.argv[1])
     function = kwargs['function']
     kwargs.pop('function')
-    
+
 
     #--- CREATE THE ROOT WINDOW ---#
     if 'title' not in kwargs:
         kwargs['title'] = ''
     if 'message' not in kwargs:
         kwargs['message'] = ''
+    if 'min_width' not in kwargs:
+        kwargs['min_width'] = 100
+    if 'min_height' not in kwargs:
+        kwargs['min_height'] = 100
 
     root = tk.Tk()
 
@@ -155,33 +188,35 @@ if __name__ == '__main__':
 
     # Disable resize button on windows
     if is_pc:
-        root.attributes('-toolwindow', True)    
-        
+        root.attributes('-toolwindow', True)
+
     # Add the main frame
-    frame = ttk.Frame(root, padding=5 if is_mac else 0)
+    frame = ttk.Frame(root, padding=5)
     frame.pack(fill=tk.X)
 
-    # Add the picture
-    if 'picture' in kwargs and kwargs['picture'] is not None:
-        if kwargs['picture'] == 'error':
-            kwargs['picture'] = my_path + '/error.png'
+    # Add the icon
+    if 'icon' in kwargs and kwargs['icon'] is not None:
+        if kwargs['icon'] == 'error':
+            kwargs['icon'] = my_path + '/error.png'
         try:
-            picture_image = tk.PhotoImage(file=kwargs['picture'])
-            picture = tk.Label(frame, image=picture_image)
-            picture.pack(fill=tk.X)
+            icon_image = tk.PhotoImage(file=kwargs['icon'])
+            icon = tk.Label(frame, image=icon_image)
+            icon.pack(fill=tk.X)
         except:
             pass
 
     # Add the message label
-    lbl = ttk.Label(frame, text=kwargs['message'])
+    lbl = ttk.Label(frame, text=kwargs['message'], padding=(0, 5))
     lbl.pack(fill=tk.X)
-    
+
     #--- PASS THE REST TO THE REQUESTED FUNCTION ---#
 
     if function == 'button_dialog':
         print(json.dumps(button_dialog(root, frame, **kwargs)))
+    elif function == 'message':
+        message(root, frame, **kwargs)
     elif function == 'get_filename':
         print(json.dumps(get_filename(root, **kwargs)))
     elif function == 'get_folder':
         print(json.dumps(get_folder(root, **kwargs)))
-        
+

@@ -26,16 +26,20 @@ __license__ = "Apache 2.0"
 
 import limitedinteraction as ltdi
 
-print('Pick a folder that is not the current folder.')
+ltdi.message('Pick a folder that is not the current folder.')
 foldername = ltdi.get_folder()
 
-print('Check that you are in the same folder that you selected and pick a file.')
+ltdi.message('Check that you are in the same folder that you selected and '
+             'pick a file.')
 filename = ltdi.get_filename(initial_folder=foldername)
+
+ltdi.message('')
 
 choice = ltdi.button_dialog(f'Is the file {filename}?', ['Yes', 'No'])
 
 assert choice == 0
 
-choice = ltdi.button_dialog(f'Do you see an error icon?', ['Yes', 'No'], picture='error')
+choice = ltdi.button_dialog('Do you see an error icon?', ['Yes', 'No'],
+                            icon='error')
 
 assert choice == 0

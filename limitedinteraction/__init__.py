@@ -18,10 +18,10 @@
 """
 Provides simple, backend-independant GUI tools for simple user interaction.
 
-This module provides simple GUI tools that run in their own process, so that it cannot
-conflict with the current running event loop. It has no external dependency, and updates
-the matplotlib event loop in background (if matplotlib is installed) while waiting for
-user action.
+This module provides simple GUI tools that run in their own process, so that
+it cannot conflict with the current running event loop. It has no external
+dependency, and updates the matplotlib event loop in background (if
+matplotlib is installed) while waiting for user action.
 """
 
 __author__ = "Félix Chénier"
@@ -35,18 +35,23 @@ import sys
 import json
 import platform
 import time
-from functools import partial
 from threading import Thread
 import subprocess
+import warnings
 
 
 # Try setting polling pause() to plt.pause() if matplotlib is installed
 try:
     import matplotlib.pyplot as plt
+
     def polling_pause():
+        """Pause while refreshing Matplotlib while waiting for user."""
         plt.pause(0.2)
+
 except ImportError:
+
     def polling_pause():
+        """Pause while waiting for user."""
         time.sleep(0.2)
 
 
@@ -57,11 +62,35 @@ is_linux = True if platform.system() == 'Linux' else False
 my_path = os.path.dirname(os.path.abspath(__file__))
 cmd_file = my_path + '/cmd.py'
 
+# Temporary folder
+try:
+    if is_pc and 'TEMP' in os.environ:
+        _base_temp_folder = os.environ['TEMP']
+        _temp_folder = _base_temp_folder + '/limitedinteraction'
+    elif is_mac and 'TMPDIR' in os.environ:
+        _base_temp_folder = os.environ['TMPDIR']
+        _temp_folder = _base_temp_folder + '/limitedinteraction'
+    else:
+        _temp_folder = os.environ['HOME'] + '/.limitedinteraction'
+
+    try:
+        os.mkdir(_temp_folder)
+    except FileExistsError:
+        pass
+
+except Exception:
+    warnings.warn('Could not set temporary folder.')
+    _temp_folder = '.'
+
+# Set some state variables
+_message_window_int = [0]
+
 
 def button_dialog(message="Please select an option",
                   choices=["Cancel", "OK"],
                   title="",
-                  picture=None):
+                  icon=None,
+                  **kwargs):
     """
     Create a blocking dialog window with a selection of buttons.
 
@@ -73,8 +102,8 @@ def button_dialog(message="Please select an option",
         List of button text.
     title (optional)
         Title of the dialog window.
-    picture (optional)
-        Path to a picture to include in the dialog window.
+    icon (optional)
+        Path to an icon (png image) to include in the dialog window.
 
     Returns
     -------
@@ -90,7 +119,8 @@ def button_dialog(message="Please select an option",
          'message': message,
          'choices': choices,
          'title': title,
-         'picture': picture})]
+         'icon': icon,
+         **kwargs})]
 
     def threaded_function():
         button[0] = int(subprocess.check_output(command_call,
@@ -103,6 +133,49 @@ def button_dialog(message="Please select an option",
         polling_pause()  # Update matplotlib so that is responds to user input
 
     return button[0]
+
+
+def message(message, **kwargs) -> None:
+    """
+    Show a message window.
+
+    Parameters
+    ----------
+    message
+        The message to show. Use '' to close the previous message windows.
+
+    """
+    # Begins by deleting the current message
+    for file in os.listdir(_temp_folder):
+        if 'limitedinteraction_message_flag' in file:
+            os.remove(_temp_folder + '/' + file)
+
+    if message is None or message == '':
+        return
+
+    print(message)
+
+    _message_window_int[0] += 1
+    flagfile = (f"{_temp_folder}/"
+                f"limitedinteraction_message_flag{_message_window_int}")
+
+    fid = open(flagfile, 'w')
+    fid.write("DELETE THIS FILE TO CLOSE THE LIMITEDINTERACTION MESSAGE "
+              "WINDOW.")
+    fid.close()
+
+    command_call = [sys.executable, cmd_file, json.dumps(
+        {'function': 'message',
+         'message': message,
+         'flagfile': flagfile,
+         **kwargs})]
+
+    def threaded_function():
+        subprocess.call(command_call,
+                        stderr=subprocess.DEVNULL)
+
+    thread = Thread(target=threaded_function)
+    thread.start()
 
 
 def get_folder(initial_folder: str = '.') -> str:
