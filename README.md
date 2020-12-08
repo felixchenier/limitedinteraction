@@ -19,22 +19,25 @@ in its own process, and is therefore compatible with any interactive backend.
 
 ## Usage ##
 
-At the moment, only one function is implemented (button_dialog).
+At the moment, the following functions are implemented:
 
     import limitedinteraction as ltdi
-    
+
+	# button_dialog
+	    
     choice = ltdi.button_dialog(message="Please select an option.",
                                 choices=["Cancel", "OK"],
                                 title="Window title",
-                                picture=path/to/picture.png):
-    	
-## Matlab equivalents ##
-
-	MATLAB <--> LIMITEDINTERACTION
-
-    msgbox(message, title) <--> ltdi.button_dialog(message, ['OK'], title)
-
-    menu(header, item1, item2, ...) <--> ltdi.button_dialog(header, [item1, item2, ...])
+                                picture=path/to/picture.png)
+                                
+    # get_folder
+    
+    folder_name = ltdi.get_folder(initial_folder='.')
+    
+    # get_filename
+    
+    file_name = ltdi.get_filename(initial_folder='.')
+    
 
 ## Warning ##
 

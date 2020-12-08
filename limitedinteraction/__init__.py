@@ -30,10 +30,9 @@ __email__ = "chenier.felix@uqam.ca"
 __license__ = "Apache 2.0"
 
 
+import os
 import sys
 import json
-import tkinter as tk
-import tkinter.ttk as ttk
 import platform
 import time
 from functools import partial
@@ -41,43 +40,25 @@ from threading import Thread
 import subprocess
 
 
+# Try setting polling pause() to plt.pause() if matplotlib is installed
+try:
+    import matplotlib.pyplot as plt
+    def polling_pause():
+        plt.pause(0.2)
+except ImportError:
+    def polling_pause():
+        time.sleep(0.2)
+
+
+# Set some constants
 is_pc = True if platform.system() == 'Windows' else False
 is_mac = True if platform.system() == 'Darwin' else False
 is_linux = True if platform.system() == 'Linux' else False
+my_path = os.path.dirname(os.path.abspath(__file__))
+cmd_file = my_path + '/cmd.py'
 
 
-def _get_window_geometry(root):
-    """Return the root geometry as the tuple (width, height, left, top)."""
-    root.update()
-    geometry = root.geometry()
-
-    size = geometry[:geometry.find('+')]
-    position = geometry[geometry.find('+')+1:]
-
-    width = int(size[:size.find('x')])
-    height = int(size[geometry.find('x')+1:])
-
-    left = int(position[:position.find('+')])
-    top = int(position[position.find('+')+1:])
-
-    return (width, height, left, top)
-
-
-def _show_window(root):
-    """Show the window (remove transparency)"""
-    
-    # Move the root window to the top left of the screen, with a slight offset to
-    # compensate for macOS menu bar and to avoid hiding maximized window bar and
-    # controls.
-    (width, height, left, top) = _get_window_geometry(root)
-    root.geometry(f'{width}x{height}+40+40')
-
-    # Unhide the window
-    root.wm_attributes("-alpha", 1)
-    root.attributes("-alpha", 1)
-
-
-def button_dialog(message="Please select an option.",
+def button_dialog(message="Please select an option",
                   choices=["Cancel", "OK"],
                   title="",
                   picture=None):
@@ -104,7 +85,7 @@ def button_dialog(message="Please select an option.",
     """
     # Run the button dialog in a separate thread to allow updating matplotlib
     button = [None]
-    command_call = [sys.executable, __file__, json.dumps(
+    command_call = [sys.executable, cmd_file, json.dumps(
         {'function': 'button_dialog',
          'message': message,
          'choices': choices,
@@ -124,87 +105,50 @@ def button_dialog(message="Please select an option.",
     return button[0]
 
 
-def _button_dialog(root, frame, **kwargs):
-    """Implement button_dialog."""
-    # We use a list of length 1 to pass selected_choice by reference.
-    selected_choice = [-1]  # Default if we click close.
+def get_folder(initial_folder: str = '.') -> str:
+    """
+    Get folder interactively using a file dialog window.
 
-    def return_choice(ichoice):
-        selected_choice[0] = ichoice
-        root.quit()
+    Parameters
+    ----------
+    initial_folder
+        Optional. The initial folder of the file dialog.
 
-    # Buttons
-    ichoice = 0
-    for choice in kwargs['choices']:
-        btn = ttk.Button(frame,
-                        text=choice,
-                        command=partial(return_choice, ichoice))
-        btn.pack(fill=tk.X)
-        ichoice = ichoice + 1
+    Returns
+    -------
+    str
+        The full path of the selected folder. An empty string is returned if
+        the user cancelled.
 
-    _show_window(root)
-    root.mainloop()
-    return selected_choice[0]
+    """
+    temp = subprocess.check_output(
+        [sys.executable, cmd_file, json.dumps({
+            'function': 'get_folder',
+            'initial_folder': initial_folder})],
+        stderr=subprocess.DEVNULL)
 
-
-#--------------- ENTRY POINT ---------------#
-if __name__ == '__main__':
-    kwargs = json.loads(sys.argv[1])
-    function = kwargs['function']
-    kwargs.pop('function')
-    
-
-    #--- CREATE THE ROOT WINDOW ---#
-    if 'title' not in kwargs:
-        kwargs['title'] = ''
-
-    root = tk.Tk()
-
-    # Make it transparent while we modify it.
-    root.wm_attributes("-alpha", 0)
-    root.attributes('-alpha', 0)
-
-    # Ensure the window is not created as a tab on macOS
-    root.resizable(width=False, height=False)
-    root.title(kwargs['title'])
-
-    # Set topmost
-    root.attributes('-topmost', True)
-
-    # Disable resize button on windows
-    if is_pc:
-        root.attributes('-toolwindow', True)    
-        
-    # Add the main frame
-    frame = ttk.Frame(root, padding=5 if is_mac else 0)
-    frame.pack(fill=tk.X)
-
-    # Add the picture
-    if 'picture' in kwargs and kwargs['picture'] is not None:
-        try:
-            picture_image = tk.PhotoImage(file=kwargs['picture'])
-            picture = tk.Label(frame, image=picture_image)
-            picture.pack(fill=tk.X)
-        except:
-            pass
-
-    # Add the message label
-    lbl = ttk.Label(frame, text=kwargs['message'])
-    lbl.pack(fill=tk.X)
-    
-    #--- PASS THE REST TO THE REQUESTED FUNCTION ---#
-
-    if function == 'button_dialog':
-        print(json.dumps(_button_dialog(root, frame, **kwargs)))
+    return json.loads(temp.decode(sys.getdefaultencoding()))
 
 
-#--------------- WHEN IMPORTED AS A MODULE ---------------#
-else:
-    # Set the pause function to update matplotlib if installed.
-    try:
-        import matplotlib.pyplot as plt    
-        def polling_pause():
-            plt.pause(0.2)
-    except ImportError:
-        def polling_pause():
-            time.sleep(0.2)
+def get_filename(initial_folder: str = '.') -> str:
+    """
+    Get file name interactively using a file dialog window.
+
+    Parameters
+    ----------
+    initial_folder
+        Optional. The initial folder of the file dialog.
+
+    Returns
+    -------
+    str
+        The full path of the selected file. An empty string is returned if the
+        user cancelled.
+    """
+    temp = subprocess.check_output(
+        [sys.executable, cmd_file, json.dumps({
+            'function': 'get_filename',
+            'initial_folder': initial_folder})],
+        stderr=subprocess.DEVNULL)
+
+    return json.loads(temp.decode(sys.getdefaultencoding()))

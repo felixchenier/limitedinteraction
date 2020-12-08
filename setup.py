@@ -18,7 +18,8 @@ setuptools.setup(
     license='Apache',
 	license_files=['LICENSE'],
     packages=setuptools.find_packages(),
-    package_data={},
+    package_data={
+        'limitedinteraction': ['VERSION', 'error.png']},
     project_urls={
         'Source': 'https://github.com/felixchenier/limitedinteraction/',
         'Tracker': 'https://github.com/felixchenier/limitedinteraction/issues',
