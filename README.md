@@ -22,11 +22,8 @@ equivalent functions in the vast python ecosystem that are:
 This module is designed to be a limited but extra-easy option to interact with
 a user without even thinking about what is a GUI. It has no dependencies and
 should work out of the box in any situation where the python interpreter is run
-locally*. It is based on tkinter, but since it starts its own processes, it can
+locally. It is based on tkinter, but since it starts its own processes, it can
 be run conjointly with any other backend (Qt, wxwindows, etc.).
-
-Please note that this module won't work in remote jupyter sessions or in REPL
-environments, since in these cases, python is not running locally.
 
 
 ## Usage ##
@@ -41,8 +38,8 @@ import limitedinteraction as li
 
 ```python
 li.message('Please wait a few moments.',
-            title='Calculating...',
-            icon='clock')
+           title='Calculating...',
+           icon='clock')
 ```
 
 ![message_calculating_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/message_calculating.png)
@@ -72,19 +69,19 @@ This same function can have several inputs and some inputs can be masked:
 
 ```python
 credentials = li.input_dialog('Please enter your credentials',
-                               descriptions=['Username:', 'Password:'],
-                               initial_values=['username', 'password'],
-                               masked=[False, True],
-                               icon='lock')
+                              descriptions=['Username:', 'Password:'],
+                              initial_values=['username', 'password'],
+                              masked=[False, True],
+                              icon='lock')
 ```
 ![input_dialog_credentials_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/input_dialog_credentials.png)
 
 
 ```python
 choice_index = li.button_dialog('Please zoom on the figure and click Next.',
-                                 choices=['Next', 'Cancel'],
-                                 title='User interaction',
-                                 icon='gear')
+                                choices=['Next', 'Cancel'],
+                                title='User interaction',
+                                icon='gear')
 ```
 
 ![button_dialog_user_interaction_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/button_dialog_user_interaction.png)
