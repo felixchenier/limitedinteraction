@@ -34,15 +34,15 @@ environments, since in these cases, python is not running locally.
 ### Importing ###
 
 ```python
-import limitedinteraction as ltdi
+import limitedinteraction as li
 ```
 
 ### Creating a persistent message window ###
 
 ```python
-ltdi.message('Please wait a few moments.',
-              title='Calculating...',
-              icon='clock')
+li.message('Please wait a few moments.',
+            title='Calculating...',
+            icon='clock')
 ```
 
 ![message_calculating](/doc/message_calculating.png)
@@ -52,7 +52,7 @@ immediately, while this message window stays in foreground.
 
 ```python
 # Close the message window
-ltdi.message('')
+li.message('')
 ```
 
 ### Asking for user input ###
@@ -80,10 +80,10 @@ credentials = li.input_dialog('Please enter your credentials',
 
 
 ```python
-choice_index = ltdi.button_dialog('Please zoom on the figure and click Next.',
-                                  choices=['Next', 'Cancel'],
-                                  title='User interaction',
-                                  icon='gear')
+choice_index = i.button_dialog('Please zoom on the figure and click Next.',
+                                choices=['Next', 'Cancel'],
+                                title='User interaction',
+                                icon='gear')
 ```
 
 ![button_dialog_user_interaction.png](/doc/button_dialog_user_interaction.png)
@@ -98,14 +98,14 @@ figures.
 Get a file name using the operating system's standard file selection window:
 
 ```python
-filename = ltdi.get_filename()
+filename = li.get_filename()
 ````
 
 Get a folder name using the operating system's standard folder selection
 window:
 
 ```python
-folder = ltdi.get_folder()
+folder = li.get_folder()
 ```
 
 ## Known issues ##
