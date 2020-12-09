@@ -90,7 +90,7 @@ choice_index = li.button_dialog('Please zoom on the figure and click Next.',
 ```
 
 ![button_dialog_user_interaction_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/button_dialog_user_interaction.png)
-![button_dialog_user_interaction_win10](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/button_dialog_user_interaction.png)
+![button_dialog_user_interaction_win10](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/button_dialog_user_interaction_win10.png)
 
 This is a blocking function. We wait for a choice before continuing. Meanwhile,
 Matplotlib's event loop is refreshed so that the user can interact with
