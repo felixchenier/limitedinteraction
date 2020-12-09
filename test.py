@@ -44,6 +44,10 @@ choice = ltdi.button_dialog('Do you see an error icon?', ['Yes', 'No'],
 
 assert choice == 0
 
+name = ltdi.input_dialog('Press ok if you see a place to enter something.')
+
+assert name == ['']
+
 inputs = ltdi.input_dialog('Press ok', ['One', 'Two', 'Masked'],
                            ['1', 2, '3'], [False, False, True], icon='lock')
 

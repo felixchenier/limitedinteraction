@@ -132,7 +132,8 @@ def input_dialog(root, frame, **kwargs):
     else:
         masked = []
 
-    n_boxes = max(len(descriptions),
+    n_boxes = max(1,
+                  len(descriptions),
                   len(initial_values),
                   len(masked))
 

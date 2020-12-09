@@ -1,23 +1,32 @@
-# limitedinteraction
+# Limited Interaction
 
-Provides simple, backend-independant GUI tools for simple user interaction.
+Provides simple, backend-independant GUI tools for limited user interaction.
 
-This module provides simple GUI tools that run in their own process, so that it cannot
-conflict with the current running event loop. It has no external dependency, and updates
-the matplotlib event loop in background (if matplotlib is installed) while waiting for
-user action.
+This module provides simple GUI tools that run in their own separate process,
+which proves to be useful in interactive IPython sessions. It has no external
+dependency and updates the matplotlib event loop in background (if matplotlib
+is installed) while waiting for user action.
 
 
-## Statement of need ##
+## Why another GUI module ##
 
-This module may interest people transitionning from Matlab to python, who miss Matlab's
-simple ui functions such as msgbox, menu, etc. I could not find equivalent functions in
-python that are blocking when needed, but still continue to refresh matplotlib
-in an interactive IPython session, and that do not interfere with the current backend.
+This module may interest people transitionning from Matlab to python, who miss
+Matlab's no-brainer ui functions such as msgbox, menu, etc. I could not find
+equivalent functions in the vast python ecosystem that are:
 
-This module should be a no-brainer to use. It has no dependencies and runs its own
-tkinter event loop in its own process, and is therefore compatible with any interactive
-backend.
+    - blocking when needed;
+    - but still continue to refresh matplotlib when launched in an interactive
+      IPython session;
+    - independent of the currently running IPython event loop.
+
+This module is designed to be a limited but extra-easy option to interact with
+a user without even thinking about what is a GUI. It has no dependencies and
+should work out of the box in any situation where the python interpreter is run
+locally*. It is based on tkinter, but since it starts its own processes, it can
+be run conjointly with any other backend (Qt, wxwindows, etc.).
+
+Please note that this module won't work in remote jupyter sessions or in REPL
+environments, since in these cases, python is not running locally.
 
 
 ## Usage ##
@@ -34,40 +43,68 @@ import limitedinteraction as ltdi
 ltdi.message('Please wait a few moments.',
               title='Calculating...',
               icon='clock')
-
-# This is a non-blocking function. Any code after this call is executed immediately,
-# while this message window stays in foreground.
 ```
 
 ![message_calculating](/doc/message_calculating.png)
 
+This is a non-blocking function. Any code after this call is executed
+immediately, while this message window stays in foreground.
+
 ```python
 # Close the message window
-
 ltdi.message('')
 ```
 
 ### Asking for user input ###
 
 ```python
+name = li.input_dialog('What is your name?', icon='question')
+```
+
+![input_dialog_name.png](/doc/input_dialog_name.png)
+
+This is a blocking function. We wait for user input before continuing.
+Meanwhile, Matplotlib's event loop is refreshed so that the user can
+interact with figures.
+
+This same function can have several inputs and some inputs can be masked:
+
+```python
+credentials = li.input_dialog('Please enter your credentials',
+                               descriptions=['Username:', 'Password:'],
+                               initial_values=['username', 'password'],
+                               masked=[False, True],
+                               icon='lock')
+```
+![input_dialog_credentials.png](/doc/input_dialog_credentials.png)
+
+
+```python
 choice_index = ltdi.button_dialog('Please zoom on the figure and click Next.',
                                   choices=['Next', 'Cancel'],
                                   title='User interaction',
                                   icon='gear')
-
-# This is a blocking function. We wait for a choice before continuing. Meanwhile,
-# Matplotlib's event loop is refreshed so that the user can interact with figures.
 ```
 
 ![button_dialog_user_interaction.png](/doc/button_dialog_user_interaction.png)
 
+This is a blocking function. We wait for a choice before continuing. Meanwhile,
+Matplotlib's event loop is refreshed so that the user can interact with
+figures.
+
 
 ### Other functions ###
-```python
-# Get a file name using the operating system's standard file selection window.
-filename = ltdi.get_filename()
 
-# Get a folder name using the operating system's standard folder selection window.
+Get a file name using the operating system's standard file selection window:
+
+```python
+filename = ltdi.get_filename()
+````
+
+Get a folder name using the operating system's standard folder selection
+window:
+
+```python
 folder = ltdi.get_folder()
 ```
 
