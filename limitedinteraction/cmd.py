@@ -114,6 +114,84 @@ def button_dialog(root, frame, **kwargs):
     return selected_choice[0]
 
 
+def input_dialog(root, frame, **kwargs):
+    """Terminate composing the GUI and run it."""
+    # Condition inputs
+    if 'descriptions' in kwargs:
+        descriptions = kwargs['descriptions']
+    else:
+        descriptions = []
+
+    if 'initial_values' in kwargs:
+        initial_values = kwargs['initial_values']
+    else:
+        initial_values = []
+
+    if 'masked' in kwargs:
+        masked = kwargs['masked']
+    else:
+        masked = []
+
+    n_boxes = max(len(descriptions),
+                  len(initial_values),
+                  len(masked))
+
+    if len(descriptions) == 0:
+        descriptions = [''] * n_boxes
+    if len(initial_values) == 0:
+        initial_values = [''] * n_boxes
+    if len(masked) == 0:
+        masked = [False] * n_boxes
+
+    if (
+            len(descriptions) != n_boxes or
+            len(initial_values) != n_boxes or
+            len(masked) != n_boxes):
+        return ("!!!ERROR!!! Length mismatch between descriptions, "
+                "initial_values and masked.")
+
+    outputs = [[]]
+
+    # OK callback
+    def ok_pressed(*args):
+        for entry in entries:
+            outputs[0].append(entry.get())
+        root.quit()
+
+    # Add labels and entries
+    labels = []
+    entries = []
+    for i, description in enumerate(descriptions):
+
+        # Label
+        if len(description) > 0:
+            label = ttk.Label(frame, text=description)
+            label.pack(fill=tk.X)
+            label.configure(anchor="center")  # center justified
+            labels.append(label)
+
+        # Entry
+        if masked[i]:
+            entry = ttk.Entry(frame, show='*')
+        else:
+            entry = ttk.Entry(frame)
+
+        entry.insert(0, initial_values[i])
+        entry.bind('<Return>', ok_pressed)
+        entry.pack(fill=tk.X)
+        entries.append(entry)
+
+    # Add OK button
+    ok_btn = ttk.Button(frame, text='OK', command=ok_pressed)
+    ok_btn.bind('<Return>', ok_pressed)
+    ok_btn.pack(fill=tk.X)
+
+    place_window(root, **kwargs)
+    show_window(root)
+    root.mainloop()
+    return outputs[0]
+
+
 def message(root, frame, **kwargs):
     """Terminate composing the GUI and draw until flagfile is deleted."""
     place_window(root, **kwargs)
@@ -232,6 +310,8 @@ if __name__ == '__main__':
 
     if function == 'button_dialog':
         print(json.dumps(button_dialog(root, frame, **kwargs)))
+    elif function == 'input_dialog':
+        print(json.dumps(input_dialog(root, frame, **kwargs)))
     elif function == 'message':
         message(root, frame, **kwargs)
     elif function == 'get_filename':

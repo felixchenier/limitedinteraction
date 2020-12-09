@@ -38,6 +38,7 @@ import time
 from threading import Thread
 import subprocess
 import warnings
+from typing import Sequence, Union, Any, List, Dict, Optional
 
 
 # Try setting polling pause() to plt.pause() if matplotlib is installed
@@ -84,6 +85,15 @@ except Exception:
 
 # Set some state variables
 _message_window_int = [0]
+
+
+def _print_command_call(command_call):
+    """Print command call (for debugging)."""
+    print(f'command call: {command_call}')
+    expanded = ''
+    for _ in command_call:
+        expanded = expanded + f"'{_}' "
+    print(f'expanded command call: {expanded}')
 
 
 def button_dialog(message="Please select an option",
@@ -178,7 +188,66 @@ def message(message, **kwargs) -> None:
     thread.start()
 
 
-def get_folder(initial_folder: str = '.') -> str:
+def input_dialog(
+        message: str = '',
+        descriptions: Sequence[str] = [],
+        initial_values: Sequence[str] = [],
+        masked: Sequence[bool] = [],
+        **kwargs) -> List[str]:
+    """
+    Prompt the user with an input dialog.
+
+    Parameters
+    ----------
+    message
+        Message to show to the user
+
+    inputs
+        Inputs description and configuration. This is a list of either:
+            - str, in which case the provided str is the description of the
+              corresponding input.
+            - dict with the following key:
+                - 'description' (str): Description of the corresponding input.
+                - 'initial' (optional, str): Initial value.
+                - 'mask' (optiona, bool): True to mask the input with ****.
+
+    Returns
+    -------
+    List[str]
+        A list of the returnes inputs.
+
+    """
+    # Run the input dialog in a separate thread to allow updating matplotlib
+    output = [None]
+    command_call = [sys.executable, cmd_file, json.dumps(
+        {'function': 'input_dialog',
+         'message': message,
+         'descriptions': descriptions,
+         'initial_values': initial_values,
+         'masked': masked,
+         **kwargs})]
+
+    if 'debug' in kwargs and kwargs['debug']:
+        _print_command_call(command_call)
+
+    def threaded_function():
+        p_output = json.loads(subprocess.check_output(command_call).decode())
+        if isinstance(p_output, str) and p_output.startswith('!!!ERROR!!!'):
+            print(p_output)
+            output[0] = []
+        else:
+            output[0] = p_output
+
+    thread = Thread(target=threaded_function)
+    thread.start()
+
+    while output[0] is None:
+        polling_pause()  # Update matplotlib so that is responds to user input
+
+    return output[0]
+
+
+def get_folder(initial_folder: str = '.', **kwargs) -> str:
     """
     Get folder interactively using a file dialog window.
 
@@ -197,13 +266,14 @@ def get_folder(initial_folder: str = '.') -> str:
     temp = subprocess.check_output(
         [sys.executable, cmd_file, json.dumps({
             'function': 'get_folder',
-            'initial_folder': initial_folder})],
+            'initial_folder': initial_folder,
+            **kwargs})],
         stderr=subprocess.DEVNULL)
 
     return json.loads(temp.decode(sys.getdefaultencoding()))
 
 
-def get_filename(initial_folder: str = '.') -> str:
+def get_filename(initial_folder: str = '.', **kwargs) -> str:
     """
     Get file name interactively using a file dialog window.
 
@@ -221,7 +291,8 @@ def get_filename(initial_folder: str = '.') -> str:
     temp = subprocess.check_output(
         [sys.executable, cmd_file, json.dumps({
             'function': 'get_filename',
-            'initial_folder': initial_folder})],
+            'initial_folder': initial_folder,
+            **kwargs})],
         stderr=subprocess.DEVNULL)
 
     return json.loads(temp.decode(sys.getdefaultencoding()))
