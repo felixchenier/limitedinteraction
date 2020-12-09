@@ -28,7 +28,7 @@ backend.
 import limitedinteraction as ltdi
 ```
 
-### Creating persistent message windows ###
+### Creating a persistent message window ###
 
 ```python
 ltdi.message('Please wait a few moments.',
@@ -48,7 +48,7 @@ ltdi.message('')  # Close the message window.
 choice_index = ltdi.button_dialog(message='Please zoom on the figure and click Next.',
                                   choices=['Next', 'Cancel'],
                                   title='User interaction',
-                                  picture='gear')
+                                  icon='gear')
 ```
 
 ![button_dialog_user_interaction.png](/doc/button_dialog_user_interaction.png)
