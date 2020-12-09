@@ -296,3 +296,35 @@ def get_filename(initial_folder: str = '.', **kwargs) -> str:
         stderr=subprocess.DEVNULL)
 
     return json.loads(temp.decode(sys.getdefaultencoding()))
+
+
+if __name__ == '__main__':
+    # Running this script launches the interactive test/demo."
+    choice = button_dialog(
+        "Now we will run Limited Interaction's tests.",
+        ["OK, let's go", "Quit"],
+        icon='gear')
+
+    if choice == 0:
+
+        message('Pick a folder that is not the current folder.')
+        foldername = get_folder(icon='gear')
+
+        message('Check that you are in the same folder that you selected and '
+                'pick a random file.')
+        filename = get_filename(initial_folder=foldername, icon='gear')
+        message('')
+
+        choice = button_dialog(f'Did you select this file:\n{filename}?',
+                               ['Yes', 'No'], icon='question')
+        assert choice == 0
+
+        something = input_dialog('Please enter something.')
+        inputs = input_dialog(
+            'Enter ok in 1st position if what you entered is in second '
+            'position and if last position is masked.',
+            ['1st position', '2nd position', '3rd position'],
+            [1, something[0], 'you should see it'],
+            [False, False, True])
+
+        assert inputs[0].lower() == 'ok'

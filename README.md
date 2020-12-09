@@ -45,7 +45,8 @@ li.message('Please wait a few moments.',
             icon='clock')
 ```
 
-![message_calculating](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/message_calculating.png)
+![message_calculating_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/message_calculating.png)
+![message_calculating_win10](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/message_calculating_win10.png)
 
 This is a non-blocking function. Any code after this call is executed
 immediately, while this message window stays in foreground.
@@ -61,7 +62,8 @@ li.message('')
 name = li.input_dialog('What is your name?', icon='question')
 ```
 
-![input_dialog_name.png](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/input_dialog_name.png)
+![input_dialog_name_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/input_dialog_name.png)
+![input_dialog_name_win10](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/input_dialog_name_win10.png)
 
 This is a blocking function. We wait for user input before continuing.
 Meanwhile, Matplotlib's event loop is refreshed so that the user can
@@ -76,7 +78,8 @@ credentials = li.input_dialog('Please enter your credentials',
                                masked=[False, True],
                                icon='lock')
 ```
-![input_dialog_credentials.png](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/input_dialog_credentials.png)
+![input_dialog_credentials_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/input_dialog_credentials.png)
+![input_dialog_credentials_win10](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/input_dialog_credentials_win10.png)
 
 
 ```python
@@ -86,7 +89,8 @@ choice_index = li.button_dialog('Please zoom on the figure and click Next.',
                                  icon='gear')
 ```
 
-![button_dialog_user_interaction.png](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/button_dialog_user_interaction.png)
+![button_dialog_user_interaction_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/button_dialog_user_interaction.png)
+![button_dialog_user_interaction_win10](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/button_dialog_user_interaction.png)
 
 This is a blocking function. We wait for a choice before continuing. Meanwhile,
 Matplotlib's event loop is refreshed so that the user can interact with

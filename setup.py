@@ -19,7 +19,7 @@ setuptools.setup(
 	license_files=['LICENSE'],
     packages=setuptools.find_packages(),
     package_data={
-        'limitedinteraction': ['VERSION', 'error.png']},
+        'limitedinteraction': ['VERSION', 'images/*.png']},
     project_urls={
         'Source': 'https://github.com/felixchenier/limitedinteraction/',
         'Tracker': 'https://github.com/felixchenier/limitedinteraction/issues',
