@@ -21,20 +21,30 @@ backend.
 
 
 ## Usage ##
+
+### Importing ###
+
 ```python
 import limitedinteraction as ltdi
+```
 
-ltdi.message('Please wait a few moments while I calculate.',
+### Creating persistent message windows ###
+
+```python
+ltdi.message('Please wait a few moments.',
               title='Calculating...',
               icon='clock')
 ```
 
 ![message_calculating](/doc/message_calculating.png)
 
-
 ```python
 ltdi.message('')  # Close the message window.
+```
 
+### Asking for selection ###
+
+```python
 choice_index = ltdi.button_dialog(message='Please zoom on the figure and click Next.',
                                   choices=['Next', 'Cancel'],
                                   title='User interaction',
@@ -44,7 +54,7 @@ choice_index = ltdi.button_dialog(message='Please zoom on the figure and click N
 ![button_dialog_user_interaction.png](/doc/button_dialog_user_interaction.png)
 
 
-## Other functions ##
+### Other functions ###
 ```python
 filename = ltdi.get_filename()
 folder = ltdi.get_folder()
