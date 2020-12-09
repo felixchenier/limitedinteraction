@@ -14,10 +14,10 @@ This module may interest people transitionning from Matlab to python, who miss
 Matlab's no-brainer ui functions such as msgbox, menu, etc. I could not find
 equivalent functions in the vast python ecosystem that are:
 
-    - blocking when needed;
-    - but still continue to refresh matplotlib when launched in an interactive
-      IPython session;
-    - independent of the currently running IPython event loop.
+- blocking when needed;
+- but still continue to refresh matplotlib when launched in an interactive
+  IPython session;
+- independent of the currently running IPython event loop.
 
 This module is designed to be a limited but extra-easy option to interact with
 a user without even thinking about what is a GUI. It has no dependencies and

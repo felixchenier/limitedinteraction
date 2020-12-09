@@ -180,6 +180,8 @@ def input_dialog(root, frame, **kwargs):
         entry.insert(0, initial_values[i])
         entry.bind('<Return>', ok_pressed)
         entry.pack(fill=tk.X)
+        if i == 0:
+            entry.focus()
         entries.append(entry)
 
     # Add OK button
@@ -190,7 +192,13 @@ def input_dialog(root, frame, **kwargs):
     place_window(root, **kwargs)
     show_window(root)
     root.mainloop()
-    return outputs[0]
+
+    if outputs == [[]]:  # Closed the window
+        return -1
+    elif n_boxes == 1:  # Only one box, we return a str
+        return outputs[0][0]
+    else:  # Multiple boxes, we return the full list of str
+        return outputs[0]
 
 
 def message(root, frame, **kwargs):

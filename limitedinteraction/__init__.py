@@ -16,7 +16,7 @@
 # limitations under the License.
 
 """
-Provides simple, backend-independant GUI tools for simple user interaction.
+Provides simple, backend-independant GUI tools for limited user interaction.
 
 This module provides simple GUI tools that run in their own process, so that
 it cannot conflict with the current running event loop. It has no external
@@ -163,8 +163,6 @@ def message(message, **kwargs) -> None:
     if message is None or message == '':
         return
 
-    print(message)
-
     _message_window_int[0] += 1
     flagfile = (f"{_temp_folder}/"
                 f"limitedinteraction_message_flag{_message_window_int}")
@@ -193,7 +191,7 @@ def input_dialog(
         descriptions: Sequence[str] = [],
         initial_values: Sequence[str] = [],
         masked: Sequence[bool] = [],
-        **kwargs) -> List[str]:
+        **kwargs) -> Union[str, List[str]]:
     """
     Prompt the user with an input dialog.
 
@@ -213,8 +211,9 @@ def input_dialog(
 
     Returns
     -------
-    List[str]
-        A list of the returnes inputs.
+    str or List[str]
+        If there was only one input, a str corresponding to this input is
+        returned. If there was multiple inputs, a list of str is returned.
 
     """
     # Run the input dialog in a separate thread to allow updating matplotlib
@@ -307,6 +306,22 @@ if __name__ == '__main__':
 
     if choice == 0:
 
+        choice = button_dialog('Close the window.', ['Do not click here'])
+        assert choice == -1
+
+        something = input_dialog('Close the window again.')
+        assert something == -1
+
+        something = input_dialog('Please enter something.')
+        inputs = input_dialog(
+            'Click ok if what you entered is in 2nd position and if last '
+            'position is masked. Close the window otherwise.',
+            ['1st position', '2nd position', '3rd position'],
+            [1, something, 'you should see it'],
+            [False, False, True])
+
+        assert inputs[0] == '1'
+
         message('Pick a folder that is not the current folder.')
         foldername = get_folder(icon='gear')
 
@@ -318,13 +333,3 @@ if __name__ == '__main__':
         choice = button_dialog(f'Did you select this file:\n{filename}?',
                                ['Yes', 'No'], icon='question')
         assert choice == 0
-
-        something = input_dialog('Please enter something.')
-        inputs = input_dialog(
-            'Enter ok in 1st position if what you entered is in second '
-            'position and if last position is masked.',
-            ['1st position', '2nd position', '3rd position'],
-            [1, something[0], 'you should see it'],
-            [False, False, True])
-
-        assert inputs[0].lower() == 'ok'
