@@ -34,21 +34,29 @@ import limitedinteraction as ltdi
 ltdi.message('Please wait a few moments.',
               title='Calculating...',
               icon='clock')
+
+# This is a non-blocking function. Any code after this call is executed immediately,
+# while this message window stays in foreground.
 ```
 
 ![message_calculating](/doc/message_calculating.png)
 
 ```python
-ltdi.message('')  # Close the message window.
+# Close the message window
+
+ltdi.message('')
 ```
 
-### Asking for selection ###
+### Asking for user input ###
 
 ```python
-choice_index = ltdi.button_dialog(message='Please zoom on the figure and click Next.',
+choice_index = ltdi.button_dialog('Please zoom on the figure and click Next.',
                                   choices=['Next', 'Cancel'],
                                   title='User interaction',
                                   icon='gear')
+
+# This is a blocking function. We wait for a choice before continuing. Meanwhile,
+# Matplotlib's event loop is refreshed so that the user can interact with figures.
 ```
 
 ![button_dialog_user_interaction.png](/doc/button_dialog_user_interaction.png)
@@ -56,7 +64,10 @@ choice_index = ltdi.button_dialog(message='Please zoom on the figure and click N
 
 ### Other functions ###
 ```python
+# Get a file name using the operating system's standard file selection window.
 filename = ltdi.get_filename()
+
+# Get a folder name using the operating system's standard folder selection window.
 folder = ltdi.get_folder()
 ```
 
@@ -68,4 +79,5 @@ problems:
 - On macOS Mojave, tkinter is known to be seriously broken. If you use a Mac, please use
   any other OS version than Mojave.
 
-- On Linux, tkinter fonts are ugly under anaconda python. It works, but it looks ancient.
+- On Anaconda python on Linux, tkinter fonts are very ugly. It still works, but it looks
+  ancient.
