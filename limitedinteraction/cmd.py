@@ -18,8 +18,8 @@
 """
 Implements limitedinteraction functions.
 
-This file is not to be included as a module but instead called as a separate process by
-limitedinteraction/__init__.py.
+This file is not to be included as a module but instead called as a separate
+process by limitedinteraction/__init__.py.
 """
 
 __author__ = "Félix Chénier"
@@ -162,7 +162,6 @@ if __name__ == '__main__':
     function = kwargs['function']
     kwargs.pop('function')
 
-
     #--- CREATE THE ROOT WINDOW ---#
     if 'title' not in kwargs:
         kwargs['title'] = ''
@@ -194,19 +193,39 @@ if __name__ == '__main__':
     frame = ttk.Frame(root, padding=5)
     frame.pack(fill=tk.X)
 
-    # Add the icon
+    # Add the icon and set application icon
     if 'icon' in kwargs and kwargs['icon'] is not None:
-        if kwargs['icon'] == 'error':
-            kwargs['icon'] = my_path + '/error.png'
+        if kwargs['icon'] in ['alert', 'clock', 'cloud', 'error', 'find',
+                              'gear', 'info', 'light', 'lock', 'question',
+                              'warning']:
+            small_icon = my_path + f"/images/{kwargs['icon']}_small.png"
+            large_icon = my_path + f"/images/{kwargs['icon']}_large.png"
+
+        else:
+            if isinstance(kwargs['icon'], str):
+                small_icon = kwargs['icon']
+                large_icon = kwargs['icon']
+            elif isinstance(kwargs['icon'], list):
+                small_icon = kwargs['icon'][0]
+                large_icon = kwargs['icon'][1]
+            else:
+                small_icon = None
+                large_icon = None
+
+        # Add the icon to the main frame
         try:
-            icon_image = tk.PhotoImage(file=kwargs['icon'])
+            icon_image = tk.PhotoImage(file=small_icon)
             icon = tk.Label(frame, image=icon_image)
             icon.pack(fill=tk.X)
         except:
             pass
 
+        # Set the application icon
+        root.iconphoto(False, tk.PhotoImage(file=large_icon))
+
     # Add the message label
     lbl = ttk.Label(frame, text=kwargs['message'], padding=(0, 5))
+    lbl.configure(anchor="center")  # center justified
     lbl.pack(fill=tk.X)
 
     #--- PASS THE REST TO THE REQUESTED FUNCTION ---#
