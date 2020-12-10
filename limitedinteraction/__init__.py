@@ -97,7 +97,7 @@ def _print_command_call(command_call):
 
 
 def button_dialog(message="Please select an option",
-                  choices=["Cancel", "OK"],
+                  choices=["OK", "Cancel"],
                   title="",
                   icon=None,
                   **kwargs):

@@ -100,13 +100,17 @@ def button_dialog(root, frame, **kwargs):
         root.quit()
 
     # Buttons
+    buttons = []
     ichoice = 0
     for choice in kwargs['choices']:
         btn = ttk.Button(frame,
-                        text=choice,
-                        command=partial(return_choice, ichoice))
+                         text=choice,
+                         command=partial(return_choice, ichoice))
         btn.pack(fill=tk.X)
+        buttons.append(btn)
         ichoice = ichoice + 1
+
+    buttons[0].focus()
 
     place_window(root, **kwargs)
     show_window(root)
@@ -185,7 +189,8 @@ def input_dialog(root, frame, **kwargs):
         entries.append(entry)
 
     # Add OK button
-    ok_btn = ttk.Button(frame, text='OK', command=ok_pressed)
+    ok_btn = ttk.Button(frame, text='OK', command=ok_pressed,
+                        default='active')
     ok_btn.bind('<Return>', ok_pressed)
     ok_btn.pack(fill=tk.X)
 
