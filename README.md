@@ -23,8 +23,20 @@ This module is designed to be a limited but extra-easy option to interact with
 a user without even thinking about what is a GUI. It has no dependencies and
 should work out of the box in any situation where the python interpreter is run
 locally. It is based on tkinter, but since it starts its own processes, it can
-be run conjointly with any other backend (Qt, wxwindows, etc.).
+be run conjointly with any other backend (Qt, wxWidgets, etc.).
 
+
+## Installing ##
+
+Using pip:
+```
+pip install limitedinteraction
+```
+
+Using conda:
+```
+conda install -c conda-forge limitedinteraction
+```
 
 ## Usage ##
 
@@ -69,7 +81,7 @@ This same function can have several inputs and some inputs can be masked:
 
 ```python
 credentials = li.input_dialog('Please enter your credentials',
-                              descriptions=['Username:', 'Password:'],
+                              labels=['Username:', 'Password:'],
                               initial_values=['username', 'password'],
                               masked=[False, True],
                               icon='lock')

@@ -129,8 +129,12 @@ def _launch_subprocess(blocking=True, debug=False, **kwargs):
 
     def threaded_function():
         """Start cmd.py in its own process and wait for its completion."""
-        output[0] = subprocess.check_output(command_call,
-                                            stderr=subprocess.DEVNULL)
+        if blocking:
+            output[0] = subprocess.check_output(command_call,
+                                                stderr=subprocess.DEVNULL)
+        else:
+            subprocess.call(command_call,
+                            stderr=subprocess.DEVNULL)
 
     # Start the new process in a thread - probably too much but it works and
     # it's easy.
