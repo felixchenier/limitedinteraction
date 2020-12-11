@@ -16,12 +16,36 @@
 # limitations under the License.
 
 """
+Limited Interaction
+===================
 Provides simple, backend-independant GUI tools for limited user interaction.
 
 This module provides simple GUI tools that run in their own process, so that
 it cannot conflict with the current running event loop. It has no external
 dependency, and updates the matplotlib event loop in background (if
 matplotlib is installed) while waiting for user action.
+
+Additional parameters
+---------------------
+All functions except `get_folder` and `get_filename` accept these
+parameters in addition to their own parameters:
+
+title
+    Title of the dialog window.
+icon
+    Can be either None, a str from ['alert', 'clock', 'cloud', 'error',
+    'find', 'gear', 'info','light', 'lock', 'question', 'warning'] or a
+    or a tuple of png files: (path_to_image_in_dialog.png,
+    path_to_dock_icon.png)
+left
+    Left coordinate of the dialog window in pixels.
+top
+    Top coordinate of the dialog window in pixels.
+min_width
+    Minimal width of the dialog window in pixels.
+min_height
+    Minimal width of the dialog window in pixels.
+
 """
 
 __author__ = "Félix Chénier"
@@ -38,7 +62,7 @@ import time
 from threading import Thread
 import subprocess
 import warnings
-from typing import Sequence, Union, Any, List, Dict, Optional
+from typing import Sequence, Union, List
 
 
 # Try setting polling pause() to plt.pause() if matplotlib is installed
@@ -61,7 +85,6 @@ is_pc = True if platform.system() == 'Windows' else False
 is_mac = True if platform.system() == 'Darwin' else False
 is_linux = True if platform.system() == 'Linux' else False
 my_path = os.path.dirname(os.path.abspath(__file__))
-cmd_file = my_path + '/cmd.py'
 
 # Temporary folder
 try:
@@ -87,72 +110,62 @@ except Exception:
 _message_window_int = [0]
 
 
-def _print_command_call(command_call):
-    """Print command call (for debugging)."""
-    print(f'command call: {command_call}')
-    expanded = ''
-    for _ in command_call:
-        expanded = expanded + f"'{_}' "
-    print(f'expanded command call: {expanded}')
+def _launch_subprocess(blocking=True, debug=False, **kwargs):
+    """Launch a function and update event loop while waiting (if blocking)."""
+    output = [None]
+    command_call = [
+        sys.executable,  # python3
+        my_path + '/cmd.py',  # cmd.py
+        json.dumps(kwargs)]
 
-
-def button_dialog(message="Please select an option",
-                  choices=["OK", "Cancel"],
-                  title="",
-                  icon=None,
-                  **kwargs):
-    """
-    Create a blocking dialog window with a selection of buttons.
-
-    Parameters
-    ----------
-    message
-        Message that is presented to the user.
-    choices
-        List of button text.
-    title (optional)
-        Title of the dialog window.
-    icon (optional)
-        Path to an icon (png image) to include in the dialog window.
-
-    Returns
-    -------
-    int
-        The button number (0 = First button, 1 = Second button, etc.) If the
-        user closes the window instead of clicking a button, a value of -1 is
-        returned.
-    """
-    # Run the button dialog in a separate thread to allow updating matplotlib
-    button = [None]
-    command_call = [sys.executable, cmd_file, json.dumps(
-        {'function': 'button_dialog',
-         'message': message,
-         'choices': choices,
-         'title': title,
-         'icon': icon,
-         **kwargs})]
+    if debug:
+        print('-------')
+        print(f'command call: {command_call}')
+        expanded = ''
+        for _ in command_call:
+            expanded = expanded + f"'{_}' "
+        print('-------')
+        print(f'expanded command call: {expanded}')
 
     def threaded_function():
-        button[0] = int(subprocess.check_output(command_call,
-                        stderr=subprocess.DEVNULL))
+        """Start cmd.py in its own process and wait for its completion."""
+        output[0] = subprocess.check_output(command_call,
+                                            stderr=subprocess.DEVNULL)
 
+    # Start the new process in a thread - probably too much but it works and
+    # it's easy.
     thread = Thread(target=threaded_function)
     thread.start()
 
-    while button[0] is None:
-        polling_pause()  # Update matplotlib so that is responds to user input
+    if blocking:
+        while output[0] is None:
+            polling_pause()  # Update event loop or just wait.
 
-    return button[0]
+    if output[0] is None:
+        return None
+    else:
+        return json.loads(output[0].decode())
 
 
-def message(message, **kwargs) -> None:
+def message(
+        message: str,
+        title: str = '',
+        **kwargs) -> None:
     """
-    Show a message window.
+    Show or close a non-blocking message window.
 
     Parameters
     ----------
     message
         The message to show. Use '' to close the previous message windows.
+    title
+        Optional. Title of the message window.
+
+    Consult the module's help for additional parameters.
+
+    Returns
+    -------
+    None
 
     """
     # Begins by deleting the current message
@@ -172,23 +185,47 @@ def message(message, **kwargs) -> None:
               "WINDOW.")
     fid.close()
 
-    command_call = [sys.executable, cmd_file, json.dumps(
-        {'function': 'message',
-         'message': message,
-         'flagfile': flagfile,
-         **kwargs})]
+    _launch_subprocess(
+        blocking=False,
+        function='message',
+        message=message,
+        flagfile=flagfile,
+        **kwargs)
 
-    def threaded_function():
-        subprocess.call(command_call,
-                        stderr=subprocess.DEVNULL)
 
-    thread = Thread(target=threaded_function)
-    thread.start()
+def button_dialog(
+        message: str = 'Please select an option',
+        choices: Sequence[str] = ['OK', 'Cancel'],
+        **kwargs) -> int:
+    """
+    Show a blocking dialog window with a selection of buttons.
+
+    Parameters
+    ----------
+    message
+        Optional. Instruction to show to the user.
+    choices
+        Optional. List of str, each entry corresponding to a button caption.
+
+    Consult the module's help for additional parameters.
+
+    Returns
+    -------
+    int
+        The selected button index (0 = First button, 1 = Second button, etc.).
+        If the user closes the window instead of clicking a button, a value
+        of -1 is returned.
+    """
+    return _launch_subprocess(
+        function='button_dialog',
+        message=message,
+        choices=choices,
+        **kwargs)
 
 
 def input_dialog(
         message: str = '',
-        descriptions: Sequence[str] = [],
+        labels: Sequence[str] = [],
         initial_values: Sequence[str] = [],
         masked: Sequence[bool] = [],
         **kwargs) -> Union[str, List[str]]:
@@ -198,16 +235,15 @@ def input_dialog(
     Parameters
     ----------
     message
-        Message to show to the user
+        Optional. Instruction to show to the user.
+    labels
+        Optional. List of str: abels for each input.
+    initial_values
+        Optional. List of str: initial values for each input.
+    masked
+        Optional. List of bool: True to mask an input using stars.
 
-    inputs
-        Inputs description and configuration. This is a list of either:
-            - str, in which case the provided str is the description of the
-              corresponding input.
-            - dict with the following key:
-                - 'description' (str): Description of the corresponding input.
-                - 'initial' (optional, str): Initial value.
-                - 'mask' (optiona, bool): True to mask the input with ****.
+    Consult the module's help for additional parameters.
 
     Returns
     -------
@@ -217,33 +253,13 @@ def input_dialog(
 
     """
     # Run the input dialog in a separate thread to allow updating matplotlib
-    output = [None]
-    command_call = [sys.executable, cmd_file, json.dumps(
-        {'function': 'input_dialog',
-         'message': message,
-         'descriptions': descriptions,
-         'initial_values': initial_values,
-         'masked': masked,
-         **kwargs})]
-
-    if 'debug' in kwargs and kwargs['debug']:
-        _print_command_call(command_call)
-
-    def threaded_function():
-        p_output = json.loads(subprocess.check_output(command_call).decode())
-        if isinstance(p_output, str) and p_output.startswith('!!!ERROR!!!'):
-            print(p_output)
-            output[0] = []
-        else:
-            output[0] = p_output
-
-    thread = Thread(target=threaded_function)
-    thread.start()
-
-    while output[0] is None:
-        polling_pause()  # Update matplotlib so that is responds to user input
-
-    return output[0]
+    return _launch_subprocess(
+        function='input_dialog',
+        message=message,
+        labels=labels,
+        initial_values=initial_values,
+        masked=masked,
+        **kwargs)
 
 
 def get_folder(initial_folder: str = '.', **kwargs) -> str:
@@ -262,14 +278,10 @@ def get_folder(initial_folder: str = '.', **kwargs) -> str:
         the user cancelled.
 
     """
-    temp = subprocess.check_output(
-        [sys.executable, cmd_file, json.dumps({
-            'function': 'get_folder',
-            'initial_folder': initial_folder,
-            **kwargs})],
-        stderr=subprocess.DEVNULL)
-
-    return json.loads(temp.decode(sys.getdefaultencoding()))
+    return _launch_subprocess(
+        function='get_folder',
+        initial_folder=initial_folder,
+        **kwargs)
 
 
 def get_filename(initial_folder: str = '.', **kwargs) -> str:
@@ -287,14 +299,10 @@ def get_filename(initial_folder: str = '.', **kwargs) -> str:
         The full path of the selected file. An empty string is returned if the
         user cancelled.
     """
-    temp = subprocess.check_output(
-        [sys.executable, cmd_file, json.dumps({
-            'function': 'get_filename',
-            'initial_folder': initial_folder,
-            **kwargs})],
-        stderr=subprocess.DEVNULL)
-
-    return json.loads(temp.decode(sys.getdefaultencoding()))
+    return _launch_subprocess(
+        function='get_filename',
+        initial_folder=initial_folder,
+        **kwargs)
 
 
 if __name__ == '__main__':
