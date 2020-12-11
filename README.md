@@ -17,6 +17,14 @@ which proves to be useful in interactive IPython sessions. It has no external
 dependency and updates the matplotlib event loop in background (if matplotlib
 is installed) while waiting for user action.
 
+--------------------------------------------------------------------------------
+[Home page](https://felixchenier.uqam.ca/limitedinteraction)
+      [GitHub](https://github.com/felixchenier/limitedinteraction)
+      [Issue tracker](https://github.com/felixchenier/limitedinteraction/issues)
+      [API](https://felixchenier.uqam.ca/limitedinteraction/api.html)
+
+--------------------------------------------------------------------------------
+
 
 ## Why another GUI module ##
 
