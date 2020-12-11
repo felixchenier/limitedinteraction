@@ -4,10 +4,10 @@
 import limitedinteraction as li
 
 li.button_dialog('Provides simple, backend-independent\n'
-				 'GUI tools for limited user interaction.',
-				 choices=['OK'],
-				 title='Limited Interaction',
-				 icon='light')
+                 'GUI tools for limited user interaction.',
+                 choices=['OK'],
+                 title='Limited Interaction',
+                 icon='light')
 ```
 
 ![message_calculating_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/about.png)
