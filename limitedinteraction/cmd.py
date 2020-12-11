@@ -121,10 +121,10 @@ def button_dialog(root, frame, **kwargs):
 def input_dialog(root, frame, **kwargs):
     """Terminate composing the GUI and run it."""
     # Condition inputs
-    if 'descriptions' in kwargs:
-        descriptions = kwargs['descriptions']
+    if 'labels' in kwargs:
+        labels = kwargs['labels']
     else:
-        descriptions = []
+        labels = []
 
     if 'initial_values' in kwargs:
         initial_values = kwargs['initial_values']
@@ -137,62 +137,62 @@ def input_dialog(root, frame, **kwargs):
         masked = []
 
     n_boxes = max(1,
-                  len(descriptions),
+                  len(labels),
                   len(initial_values),
                   len(masked))
 
-    if len(descriptions) == 0:
-        descriptions = [''] * n_boxes
+    if len(labels) == 0:
+        labels = [''] * n_boxes
     if len(initial_values) == 0:
         initial_values = [''] * n_boxes
     if len(masked) == 0:
         masked = [False] * n_boxes
 
     if (
-            len(descriptions) != n_boxes or
+            len(labels) != n_boxes or
             len(initial_values) != n_boxes or
             len(masked) != n_boxes):
-        return ("!!!ERROR!!! Length mismatch between descriptions, "
+        return ("!!!ERROR!!! Length mismatch between labels, "
                 "initial_values and masked.")
 
     outputs = [[]]
 
     # OK callback
     def ok_pressed(*args):
-        for entry in entries:
-            outputs[0].append(entry.get())
+        for tk_entry in tk_entries:
+            outputs[0].append(tk_entry.get())
         root.quit()
 
     # Add labels and entries
-    labels = []
-    entries = []
-    for i, description in enumerate(descriptions):
+    tk_labels = []
+    tk_entries = []
+    for i, label in enumerate(labels):
 
         # Label
-        if len(description) > 0:
-            label = ttk.Label(frame, text=description)
-            label.pack(fill=tk.X)
-            label.configure(anchor="center")  # center justified
-            labels.append(label)
+        if len(label) > 0:
+            tk_label = ttk.Label(frame, text=label)
+            tk_label.pack(fill=tk.X)
+            tk_label.configure(anchor="center")  # center justified
+            tk_labels.append(tk_label)
 
         # Entry
         if masked[i]:
-            entry = ttk.Entry(frame, show='*')
+            tk_entry = ttk.Entry(frame, show='*')
         else:
-            entry = ttk.Entry(frame)
+            tk_entry = ttk.Entry(frame)
 
-        entry.insert(0, initial_values[i])
-        entry.bind('<Return>', ok_pressed)
-        entry.pack(fill=tk.X)
+        tk_entry.insert(0, initial_values[i])
+        tk_entry.bind('<Return>', ok_pressed)
+        tk_entry.pack(fill=tk.X)
         if i == 0:
-            entry.focus()
-        entries.append(entry)
+            tk_entry.focus()
+        tk_entries.append(tk_entry)
 
     # Add OK button
-    ok_btn = ttk.Button(frame, text='OK', command=ok_pressed,
-                        default='active')
-    ok_btn.bind('<Return>', ok_pressed)
-    ok_btn.pack(fill=tk.X)
+    tk_ok_btn = ttk.Button(frame, text='OK', command=ok_pressed,
+                           default='active')
+    tk_ok_btn.bind('<Return>', ok_pressed)
+    tk_ok_btn.pack(fill=tk.X)
 
     place_window(root, **kwargs)
     show_window(root)

@@ -9,7 +9,7 @@ with open("limitedinteraction/VERSION", "r") as fh:
 setuptools.setup(
     name='limitedinteraction',
     version=version,
-    description='Provides simple, backend-independant GUI tools for simple user interaction.',
+    description='Provides simple, backend-independant GUI tools for limited user interaction.',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/felixchenier/limitedinteraction',
@@ -27,6 +27,7 @@ setuptools.setup(
     install_requires=[],
     classifiers=[
         'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
@@ -34,6 +35,7 @@ setuptools.setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 3',
+        'Topic :: Software Development :: User Interfaces',
     ],
     python_requires='>=3.7',
 )

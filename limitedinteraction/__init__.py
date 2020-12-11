@@ -315,32 +315,44 @@ if __name__ == '__main__':
 
     if choice == 0:
 
-        choice = button_dialog('Close the window.',
+        choice = button_dialog('Check that "Hello" is written in menu bar,\n'
+                               'then close the window.',
                                ['Do not click here'],
-                               title='Test button dialog')
+                               title='Hello')
         assert choice == -1
 
         something = input_dialog('Close the window again.')
         assert something == -1
 
-        something = input_dialog('Please enter something.')
+        something = input_dialog('Please enter "test".')
+        assert something == 'test'
+
         inputs = input_dialog(
-            'Click ok if what you entered is in 2nd position and if last '
-            'position is masked. Close the window otherwise.',
-            ['1st position', '2nd position', '3rd position'],
-            [1, something, 'you should see it'],
+            'Click ok if:\n'
+            '- first entry is 1\n'
+            '- second entry is "test"\n'
+            '- last entry is masked\n'
+            '- you see labels titles.\n'
+            'Close the window otherwise.',
+            ['Label 1', 'Label 2', 'Label 3'],
+            [1, 'test', 'you should not see it'],
             [False, False, True])
 
         assert inputs[0] == '1'
+        assert inputs[1] == 'test'
+        assert inputs[2] == 'you should not see it'
 
         message('Pick a folder that is not the current folder.')
         foldername = get_folder(icon='gear')
 
-        message('Check that you are in the same folder that you selected and '
-                'pick a random file.')
+        message('Check that you are in the same folder that '
+                'you just selected,\n'
+                'then pick any file.')
         filename = get_filename(initial_folder=foldername, icon='gear')
         message('')
 
         choice = button_dialog(f'Did you select this file:\n{filename}?',
                                ['Yes', 'No'], icon='question')
         assert choice == 0
+
+        button_dialog('Test completed.', ['OK'])
