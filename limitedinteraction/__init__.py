@@ -153,7 +153,6 @@ def _launch_subprocess(blocking=True, debug=False, **kwargs):
 
 def message(
         message: str,
-        title: str = '',
         **kwargs) -> None:
     """
     Show or close a non-blocking message window.
@@ -162,8 +161,6 @@ def message(
     ----------
     message
         The message to show. Use '' to close the previous message windows.
-    title
-        Optional. Title of the message window.
 
     Consult the module's help for additional parameters.
 
@@ -318,7 +315,9 @@ if __name__ == '__main__':
 
     if choice == 0:
 
-        choice = button_dialog('Close the window.', ['Do not click here'])
+        choice = button_dialog('Close the window.',
+                               ['Do not click here'],
+                               title='Test button dialog')
         assert choice == -1
 
         something = input_dialog('Close the window again.')
