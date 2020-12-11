@@ -2,3 +2,5 @@ dist
 build
 limitedinteraction.egg-info
 limitedinteraction/__pycache__
+environment.pickle
+.buildinfo

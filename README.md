@@ -1,6 +1,16 @@
 # Limited Interaction
 
-Provides simple, backend-independant GUI tools for limited user interaction.
+```python
+import limitedinteraction as li
+
+li.button_dialog('Provides simple, backend-independent\n'
+				 'GUI tools for limited user interaction.',
+				 choices=['OK'],
+				 title='Limited Interaction',
+				 icon='light')
+```
+
+![message_calculating_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/about.png)
 
 This module provides simple GUI tools that run in their own separate process,
 which proves to be useful in interactive IPython sessions. It has no external
@@ -11,7 +21,7 @@ is installed) while waiting for user action.
 ## Why another GUI module ##
 
 This module may interest people transitionning from Matlab to python, who miss
-Matlab's no-brainer ui functions such as msgbox, menu, etc. I could not find
+Matlab's no-brainer ui functions such as msgbox, inputdlg, menu, etc. I could not find
 equivalent functions in the vast python ecosystem that are:
 
 - blocking when needed;
@@ -109,7 +119,7 @@ Get a file name using the operating system's standard file selection window:
 
 ```python
 filename = li.get_filename()
-````
+```
 
 Get a folder name using the operating system's standard folder selection
 window:

@@ -161,8 +161,8 @@ def message(
     ----------
     message
         The message to show. Use '' to close the previous message windows.
-
-    Consult the module's help for additional parameters.
+    kwargs
+        Consult the module's help for additional parameters.
 
     Returns
     -------
@@ -207,8 +207,8 @@ def button_dialog(
         Optional. Instruction to show to the user.
     choices
         Optional. List of str, each entry corresponding to a button caption.
-
-    Consult the module's help for additional parameters.
+    kwargs
+        Consult the module's help for additional parameters.
 
     Returns
     -------
@@ -243,8 +243,8 @@ def input_dialog(
         Optional. List of str: initial values for each input.
     masked
         Optional. List of bool: True to mask an input using stars.
-
-    Consult the module's help for additional parameters.
+    kwargs
+        Consult the module's help for additional parameters.
 
     Returns
     -------
@@ -304,6 +304,10 @@ def get_filename(initial_folder: str = '.', **kwargs) -> str:
         function='get_filename',
         initial_folder=initial_folder,
         **kwargs)
+
+
+def __dir__():
+    return ['message', 'input_dialog', 'button_dialog', 'get_folder', 'get_filename']
 
 
 if __name__ == '__main__':
