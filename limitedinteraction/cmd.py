@@ -20,6 +20,10 @@ Implements limitedinteraction functions.
 
 This file is not to be included as a module but instead called as a separate
 process by limitedinteraction/__init__.py.
+
+Functions that return something print a json string with [returnval, contents] where
+returnval is '' for success or a string that represent an exception to raise (e.g.,
+'ModuleNotFoundError') by the module on error.
 """
 
 __author__ = "Félix Chénier"
@@ -28,15 +32,41 @@ __email__ = "chenier.felix@uqam.ca"
 __license__ = "Apache 2.0"
 
 
-# Imports
-import tkinter as tk
-import tkinter.ttk as ttk
-import tkinter.filedialog as filedialog
+
+#---- Main imports
+import json
+import sys
+
+
+#---- Exception management
+def exit_and_raise(exception_type: str, exception_text: str):
+    """Print [exception_type, exception_text] as a json string and exit."""
+    print(json.dumps([exception_type, exception_text]))
+    sys.exit(0)
+
+
+#---- Other imports
+
+# Try to import tkinter and gracefully fail if not available
+try:
+    import tkinter as tk
+    import tkinter.ttk as ttk
+    import tkinter.filedialog as filedialog
+except ModuleNotFoundError:
+    exit_and_raise(
+        'ModuleNotFoundError', (
+            "Failed to import tkinter. \n"
+            "If you are seeing this message and are using your operating system's \n"
+            "supplied python, you may try to install the tk GUI toolkit, or best, \n"
+            "install a proper version of python (e.g., python.org, anaconda.org, \n"
+            "etc.) which normally includes tkinter and links correctly to the tk \n"
+            "GUI toolkit."))
+
+
 from functools import partial
 import time
 import os
 import platform
-import json
 import sys
 
 
@@ -152,8 +182,8 @@ def input_dialog(root, frame, **kwargs):
             len(labels) != n_boxes or
             len(initial_values) != n_boxes or
             len(masked) != n_boxes):
-        return ("!!!ERROR!!! Length mismatch between labels, "
-                "initial_values and masked.")
+        exit_and_raise('ValueError', ("Length mismatch between labels, "
+                                      "initial_values and masked."))
 
     outputs = [[]]
 
@@ -320,16 +350,18 @@ if __name__ == '__main__':
     lbl.configure(anchor="center")  # center justified
     lbl.pack(fill=tk.X)
 
-    #--- PASS THE REST TO THE REQUESTED FUNCTION ---#
+    #---- Pass the rest to the requested function and return
 
-    if function == 'button_dialog':
-        print(json.dumps(button_dialog(root, frame, **kwargs)))
+    if function == 'import':
+        print(json.dumps(['', '']))
+    elif function == 'button_dialog':
+        print(json.dumps(['', button_dialog(root, frame, **kwargs)]))
     elif function == 'input_dialog':
-        print(json.dumps(input_dialog(root, frame, **kwargs)))
+        print(json.dumps(['', input_dialog(root, frame, **kwargs)]))
     elif function == 'message':
         message(root, frame, **kwargs)
     elif function == 'get_filename':
-        print(json.dumps(get_filename(root, **kwargs)))
+        print(json.dumps(['', get_filename(root, **kwargs)]))
     elif function == 'get_folder':
-        print(json.dumps(get_folder(root, **kwargs)))
+        print(json.dumps(['', get_folder(root, **kwargs)]))
 

@@ -12,7 +12,7 @@ setuptools.setup(
     description='Provides simple, backend-independant GUI tools for limited user interaction.',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/felixchenier/limitedinteraction',
+    url='https://felixchenier.uqam.ca/limitedinteraction/',
     author='Félix Chénier',
     author_email='chenier.felix@uqam.ca',
     license='Apache',
@@ -21,6 +21,7 @@ setuptools.setup(
     package_data={
         'limitedinteraction': ['VERSION', 'images/*.png']},
     project_urls={
+        'Documentation': 'https://felixchenier.uqam.ca/limitedinteraction/api.html',
         'Source': 'https://github.com/felixchenier/limitedinteraction/',
         'Tracker': 'https://github.com/felixchenier/limitedinteraction/issues',
     },

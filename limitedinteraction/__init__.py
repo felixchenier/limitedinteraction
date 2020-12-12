@@ -148,7 +148,18 @@ def _launch_subprocess(blocking=True, debug=False, **kwargs):
     if output[0] is None:
         return None
     else:
-        return json.loads(output[0].decode())
+        to_return = json.loads(output[0].decode())
+
+        # Check if we should raise an error
+        if to_return[0] != '':
+            if to_return[0] == 'ModuleNotFoundError':
+                raise ModuleNotFoundError(to_return[1])
+            elif to_return[0] == 'ValueError':
+                raise ValueError(to_return[1])
+            else:
+                raise Exception(to_return[0] + ': ' + to_return[1])
+
+        return to_return[1]
 
 
 def message(
@@ -310,6 +321,10 @@ def __dir__():
     return ['message', 'input_dialog', 'button_dialog', 'get_folder', 'get_filename']
 
 
+#--- Check that the cmd module will respond well when asked.
+_launch_subprocess(function='import')
+
+
 if __name__ == '__main__':
     # Running this script launches the interactive test/demo."
     choice = button_dialog(
@@ -318,6 +333,18 @@ if __name__ == '__main__':
         icon='gear')
 
     if choice == 0:
+
+        #---- Non-interactive tests
+        try:
+            something = input_dialog('Test with bad arguments',
+                                     labels=['one', 'two', 'three'],
+                                     initial_values=['one', 'two'])
+            raise ValueError('You should not see this error.')
+        except ValueError:
+            pass  # all is ok
+
+
+        #---- Interactive tests
 
         choice = button_dialog('Check that "Hello" is written in menu bar,\n'
                                'then close the window.',

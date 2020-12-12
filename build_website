@@ -1,0 +1,5 @@
+cd doc
+make clean
+make html
+cd ..
+open doc/_build/html/index.html
