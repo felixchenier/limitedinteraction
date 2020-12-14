@@ -3,8 +3,8 @@
 ```python
 import limitedinteraction as li
 
-li.button_dialog('Provides simple, backend-independent\n'
-                 'GUI tools for limited user interaction.',
+li.button_dialog("Simple GUI dialogs that refresh Matplotlib's\n"
+				 "event loop in background.",
                  choices=['OK'],
                  title='Limited Interaction',
                  icon='light')
