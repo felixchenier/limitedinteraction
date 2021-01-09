@@ -65,21 +65,6 @@ import warnings
 from typing import Sequence, Union, List
 
 
-# Try setting polling pause() to plt.pause() if matplotlib is installed
-try:
-    import matplotlib.pyplot as plt
-
-    def polling_pause():
-        """Pause while refreshing Matplotlib while waiting for user."""
-        plt.pause(0.2)
-
-except ImportError:
-
-    def polling_pause():
-        """Pause while waiting for user."""
-        time.sleep(0.2)
-
-
 # Set some constants
 is_pc = True if platform.system() == 'Windows' else False
 is_mac = True if platform.system() == 'Darwin' else False
@@ -108,6 +93,28 @@ except Exception:
 
 # Set some state variables
 _message_window_int = [0]
+
+
+def _define_polling_pause():
+    """
+    Return the polling pause function.
+
+    The returned function is a wrapper to either matplotlib.pyplot.pause (in
+    the case where matplotlib is among the imported modules), or time.sleep
+    (if matplotlib is not imported).
+    """
+    if 'matplotlib' in sys.modules:
+        import matplotlib.pyplot as plt
+        def polling_pause():
+            """Pause while refreshing Matplotlib while waiting for user."""
+            plt.pause(0.2)
+
+    else:
+        def polling_pause():
+            """Pause while waiting for user."""
+            time.sleep(0.2)
+
+    return polling_pause
 
 
 def _launch_subprocess(blocking=True, debug=False, **kwargs):
@@ -142,6 +149,7 @@ def _launch_subprocess(blocking=True, debug=False, **kwargs):
     thread.start()
 
     if blocking:
+        polling_pause = _define_polling_pause()
         while output[0] is None:
             polling_pause()  # Update event loop or just wait.
 
