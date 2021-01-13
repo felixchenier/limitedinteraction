@@ -95,22 +95,51 @@ def get_window_geometry(root):
 
 def place_window(root, **kwargs):
     """Place window in screen."""
-    (width, height, left, top) = get_window_geometry(root)
+    if 'left' in kwargs and 'right' in kwargs:
+        exit_and_raise('ValueError',
+                       "'left' and 'right' cannot be both specified.")
+    if 'top' in kwargs and 'bottom' in kwargs:
+        exit_and_raise('ValueError',
+                       "'top' and 'bottom' cannot be both specified.")
 
-    if width < kwargs['min_width']:
-        width = kwargs['min_width']
-    if width < kwargs['min_height']:
-        height = kwargs['min_height']
+    # Get current dimensions
+    (contents_width, contents_height,
+     contents_left, contents_top) = get_window_geometry(root)
+
+    # Calculate frame width and titlebar height
+    # From https://exceptionshub.com/
+    #     how-to-center-a-window-on-the-screen-in-tkinter.html
+    frm_width = root.winfo_rootx() - root.winfo_x()
+    win_width = contents_width + 2 * frm_width
+    titlebar_height = root.winfo_rooty() - root.winfo_y()
+    win_height = contents_height + titlebar_height + frm_width
+
+    # Ensure to meet given minimal values for width and height
+    if win_width < kwargs['min_width']:
+        win_width = kwargs['min_width']
+
+    if 'min_height' in kwargs and win_height < kwargs['min_height']:
+        win_height = kwargs['min_height']
+
     if 'left' in kwargs:
-        left = kwargs['left']
+        win_left = kwargs['left']
+    elif 'right' in kwargs:
+        win_left = root.winfo_screenwidth() - win_width - kwargs['right']
     else:
-        left = int(root.winfo_screenwidth() / 2 - width / 2)  # center
-    if 'top' in kwargs:
-        top = kwargs['top']
-    else:
-        top = int(root.winfo_screenheight() / 2 - height / 2)  # center
+        win_left = int(root.winfo_screenwidth() / 2 - win_width / 2)  # center
 
-    root.geometry(f'{width}x{height}+{left}+{top}')
+    if 'top' in kwargs:
+        win_top = kwargs['top']
+    elif 'bottom' in kwargs:
+        win_top = root.winfo_screenheight() - win_height - kwargs['bottom']
+    else:
+        win_top = int(root.winfo_screenheight() / 2 - win_height / 2)  # center
+
+    # Window parameters to contents paramaters
+    contents_width = win_width - 2 * frm_width
+    contents_height = win_height - titlebar_height - frm_width
+
+    root.geometry(f'{contents_width}x{contents_height}+{win_left}+{win_top}')
 
 
 def show_window(root):
@@ -291,8 +320,6 @@ if __name__ == '__main__':
         kwargs['message'] = ''
     if 'min_width' not in kwargs:
         kwargs['min_width'] = 100
-    if 'min_height' not in kwargs:
-        kwargs['min_height'] = 100
 
     root = tk.Tk()
 

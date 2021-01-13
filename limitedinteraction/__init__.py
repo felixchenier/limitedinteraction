@@ -38,9 +38,17 @@ icon
     or a tuple of png files: (path_to_image_in_dialog.png,
     path_to_dock_icon.png)
 left
-    Left coordinate of the dialog window in pixels.
+    Distance between the monitor's left edge and the window's left edge in
+    pixels. Parameters 'left' and 'right' cannot be used together.
+right
+    Distance between the monitor's right edge and the window's right edge in
+    pixels. Parameters 'left' and 'right' cannot be used together.
 top
-    Top coordinate of the dialog window in pixels.
+    Distance between the monitor's top edge and the window's top edge in
+    pixels. Parameters 'top' and 'bottom' cannot be used together.
+bottom
+    Distance between the monitor's bottom edge and the window's bottom edge in
+    pixels. Parameters 'top' and 'bottom' cannot be used together.
 min_width
     Minimal width of the dialog window in pixels.
 min_height
@@ -352,12 +360,25 @@ if __name__ == '__main__':
             pass  # all is ok
 
 
+        try:
+            something = button_dialog(left=0, right=0)
+            raise ValueError('You should not see this error.')
+        except ValueError:
+            pass  # all is ok
+
+        try:
+            something = button_dialog(top=0, bottom=0)
+            raise ValueError('You should not see this error.')
+        except ValueError:
+            pass  # all is ok
+
         #---- Interactive tests
 
-        choice = button_dialog('Check that "Hello" is written in menu bar,\n'
-                               'then close the window.',
-                               ['Do not click here'],
-                               title='Hello')
+        choice = button_dialog(
+            'Check that "Hello" is written in menu bar,\n'
+            'then close the window.',
+            ['Click here only if this window is not in the right-bottom corner'],
+            title='Hello', right=0, bottom=0)
         assert choice == -1
 
         something = input_dialog('Close the window again.')

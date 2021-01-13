@@ -54,7 +54,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -320,9 +319,17 @@ parameters in addition to their own parameters:</p>
 or a tuple of png files: (path_to_image_in_dialog.png,
 path_to_dock_icon.png)</p>
 </dd>
-<dt>left</dt><dd><p>Left coordinate of the dialog window in pixels.</p>
+<dt>left</dt><dd><p>Distance between the monitor’s left edge and the window’s left edge in
+pixels. Parameters ‘left’ and ‘right’ cannot be used together.</p>
 </dd>
-<dt>top</dt><dd><p>Top coordinate of the dialog window in pixels.</p>
+<dt>right</dt><dd><p>Distance between the monitor’s right edge and the window’s right edge in
+pixels. Parameters ‘left’ and ‘right’ cannot be used together.</p>
+</dd>
+<dt>top</dt><dd><p>Distance between the monitor’s top edge and the window’s top edge in
+pixels. Parameters ‘top’ and ‘bottom’ cannot be used together.</p>
+</dd>
+<dt>bottom</dt><dd><p>Distance between the monitor’s bottom edge and the window’s bottom edge in
+pixels. Parameters ‘top’ and ‘bottom’ cannot be used together.</p>
 </dd>
 <dt>min_width</dt><dd><p>Minimal width of the dialog window in pixels.</p>
 </dd>
@@ -467,7 +474,7 @@ returned. If there was multiple inputs, a list of str is returned.</p>
               
           </div>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>
