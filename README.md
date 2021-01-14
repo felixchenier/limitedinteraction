@@ -11,8 +11,8 @@ li.button_dialog("Simple dialog windows for scripters and scientists.",
 
 ![message_calculating_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/about.png)
 
-This module provides simple, generic dialog windows specifically aimed to
-scripters and scientists who need a concise, elegant way of interacting with
+This python module provides simple, generic dialog windows specifically aimed
+to scripters and scientists who need a concise, elegant way of interacting with
 their script users.
 
 This module does not require any GUI programming, it has no external
