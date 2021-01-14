@@ -46,7 +46,7 @@
   
   
   
-    <title>Limited Interaction &#8212; Limited Interaction 0.1.4 documentation</title>
+    <title>Limited Interaction &#8212; Limited Interaction 0.2.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/material.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -81,11 +81,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="#" title="Limited Interaction 0.1.4 documentation"
+        <a href="#" title="Limited Interaction 0.2.0 documentation"
            class="md-header-nav__button md-logo">
           
               <img src="_static/logo.png" height="26"
-                   alt="Limited Interaction 0.1.4 documentation logo">
+                   alt="Limited Interaction 0.2.0 documentation logo">
           
         </a>
       </div>
@@ -173,13 +173,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="#" title="Limited Interaction 0.1.4 documentation" class="md-nav__button md-logo">
+    <a href="#" title="Limited Interaction 0.2.0 documentation" class="md-nav__button md-logo">
       
         <img src="_static/logo.png" alt=" logo" width="48" height="48">
       
     </a>
     <a href="#"
-       title="Limited Interaction 0.1.4 documentation">Limited Interaction</a>
+       title="Limited Interaction 0.2.0 documentation">Limited Interaction</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/felixchenier/limitedinteraction/" title="Go to repository" class="md-source" data-md-source="github">
@@ -237,8 +237,6 @@
   <ul class="md-nav__list" data-md-scrollfix="">
         <li class="md-nav__item"><a href="#index--page-root" class="md-nav__link">Limited Interaction</a><nav class="md-nav">
               <ul class="md-nav__list">
-        <li class="md-nav__item"><a href="#why-another-gui-module" class="md-nav__link">Why another GUI module</a>
-        </li>
         <li class="md-nav__item"><a href="#installing" class="md-nav__link">Installing</a>
         </li>
         <li class="md-nav__item"><a href="#usage" class="md-nav__link">Usage</a><nav class="md-nav">
@@ -254,6 +252,8 @@
             </nav>
         </li>
         <li class="md-nav__item"><a href="#known-issues" class="md-nav__link">Known issues</a>
+        </li>
+        <li class="md-nav__item"><a href="#credits" class="md-nav__link">Credits</a>
         </li>
         <li class="md-nav__item"><a href="#site-map" class="md-nav__link">Site map</a>
         </li></ul>
@@ -272,41 +272,28 @@
 <h1 id="index--page-root">Limited Interaction<a class="headerlink" href="#index--page-root" title="Permalink to this headline">¶</a></h1>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">limitedinteraction</span> <span class="k">as</span> <span class="nn">li</span>
 
-<span class="n">li</span><span class="o">.</span><span class="n">button_dialog</span><span class="p">(</span><span class="s2">"Simple GUI dialogs that refresh Matplotlib's</span><span class="se">\n</span><span class="s2">"</span>
-                 <span class="s2">"event loop in background."</span><span class="p">,</span>
+<span class="n">li</span><span class="o">.</span><span class="n">button_dialog</span><span class="p">(</span><span class="s2">"Simple dialog windows for scripters and scientists."</span><span class="p">,</span>
                  <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">'OK'</span><span class="p">],</span>
                  <span class="n">title</span><span class="o">=</span><span class="s1">'Limited Interaction'</span><span class="p">,</span>
                  <span class="n">icon</span><span class="o">=</span><span class="s1">'light'</span><span class="p">)</span>
 </pre></div>
 </div>
 <a class="reference external image-reference" href="https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/about.png"><img alt="message_calculating_macOS" src="https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/about.png"/></a>
-<p>This module provides simple GUI tools that run in their own separate process,
-which proves to be useful in interactive IPython sessions. It has no external
-dependency and updates the matplotlib event loop in background (if matplotlib
-is installed) while waiting for user action.</p>
+<p>This module provides simple, generic dialog windows specifically aimed to
+scripters and scientists who need a concise, elegant way of interacting with
+their script users.</p>
+<p>This module does not require any GUI programming, it has no external
+dependency, and it is completely independent of the graphical backend in use
+(if any). In IPython-based environments, its blocking functions allow
+interacting with Matplotlib figures while waiting for user action.</p>
+<p>For those transitionning from Matlab, this module fulfils the same role as
+Matlab’s msgbox, inputdlg, menu and other simple GUI functions.</p>
 <hr class="docutils"/>
 <p><a class="reference external" href="https://felixchenier.uqam.ca/limitedinteraction">Home page</a>
       <a class="reference external" href="https://github.com/felixchenier/limitedinteraction">GitHub</a>
       <a class="reference external" href="https://github.com/felixchenier/limitedinteraction/issues">Issue tracker</a>
       <a class="reference external" href="https://felixchenier.uqam.ca/limitedinteraction/api.html">API</a></p>
 <hr class="docutils"/>
-
-<h2 id="why-another-gui-module">Why another GUI module<a class="headerlink" href="#why-another-gui-module" title="Permalink to this headline">¶</a></h2>
-<p>This module may interest people transitionning from Matlab to python, who miss
-Matlab’s no-brainer ui functions such as msgbox, inputdlg, menu, etc. I could not find
-equivalent functions in the vast python ecosystem that are:</p>
-<ul class="simple">
-<li><p>blocking when needed;</p></li>
-<li><p>but still continue to refresh matplotlib when launched in an interactive
-IPython session;</p></li>
-<li><p>independent of the currently running IPython event loop.</p></li>
-</ul>
-<p>This module is designed to be a limited but extra-easy option to interact with
-a user without even thinking about what is a GUI. It has no dependencies and
-should work out of the box in any situation where the python interpreter is run
-locally. It is based on tkinter, but since it starts its own processes, it can
-be run conjointly with any other backend (Qt, wxWidgets, etc.).</p>
-
 
 <h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
 <p>Using pip:</p>
@@ -335,9 +322,9 @@ be run conjointly with any other backend (Qt, wxWidgets, etc.).</p>
 </div>
 <a class="reference external image-reference" href="https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/message_calculating.png"><img alt="message_calculating_macOS" src="https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/message_calculating.png"/></a>
 <p>This is a non-blocking function. Any code after this call is executed
-immediately, while this message window stays in foreground.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Close the message window</span>
-<span class="n">li</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+immediately, while this message window stays in foreground. To close the
+message window:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">li</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
 </pre></div>
 </div>
 
@@ -392,6 +379,17 @@ problems:</p>
 any other OS version than Mojave.</p></li>
 <li><p>On Anaconda python on Linux, tkinter fonts are very ugly. It still works, but it looks
 ancient.</p></li>
+</ul>
+
+
+<h2 id="credits">Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<p>This module is developed by Félix Chénier at the Mobility and Adaptive
+Sports Research Lab (<a class="reference external" href="https://felixchenier.uqam.ca">https://felixchenier.uqam.ca</a>).</p>
+<p>It includes artwork developed by these designers:</p>
+<ul class="simple">
+<li><p>Warning and gear icons: <a class="reference external" href="https://www.iconfinder.com/laurareen">Laura Reen</a></p></li>
+<li><p>Question mark icon: <a class="reference external" href="https://www.iconfinder.com/DesignRevision">Design Revision</a></p></li>
+<li><p>All other icons: <a class="reference external" href="https://www.iconfinder.com/recepkutuk">Recep Kütük</a></p></li>
 </ul>
 
 

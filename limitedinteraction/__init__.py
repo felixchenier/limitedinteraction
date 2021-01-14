@@ -21,9 +21,9 @@ Limited Interaction
 Provides simple, backend-independant GUI tools for limited user interaction.
 
 This module provides simple GUI tools that run in their own process, so that
-it cannot conflict with the current running event loop. It has no external
-dependency, and updates the matplotlib event loop in background (if
-matplotlib is installed) while waiting for user action.
+it cannot conflict with the current running event loop. If Matplotlib is
+imported, it updates its event loop in background while waiting for user
+action.
 
 Additional parameters
 ---------------------

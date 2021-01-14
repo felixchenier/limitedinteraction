@@ -3,8 +3,7 @@
 ```python
 import limitedinteraction as li
 
-li.button_dialog("Simple GUI dialogs that refresh Matplotlib's\n"
-				 "event loop in background.",
+li.button_dialog("Simple dialog windows for scripters and scientists.",
                  choices=['OK'],
                  title='Limited Interaction',
                  icon='light')
@@ -12,10 +11,17 @@ li.button_dialog("Simple GUI dialogs that refresh Matplotlib's\n"
 
 ![message_calculating_macOS](https://raw.githubusercontent.com/felixchenier/limitedinteraction/main/doc/about.png)
 
-This module provides simple GUI tools that run in their own separate process,
-which proves to be useful in interactive IPython sessions. It has no external
-dependency and updates the matplotlib event loop in background (if matplotlib
-is installed) while waiting for user action.
+This module provides simple, generic dialog windows specifically aimed to
+scripters and scientists who need a concise, elegant way of interacting with
+their script users.
+
+This module does not require any GUI programming, it has no external
+dependency, and it is completely independent of the graphical backend in use
+(if any). In IPython-based environments, its blocking functions allow
+interacting with Matplotlib figures while waiting for user action.
+
+For those transitionning from Matlab, this module fulfils the same role as
+Matlab's msgbox, inputdlg, menu and other simple GUI functions.
 
 --------------------------------------------------------------------------------
 [Home page](https://felixchenier.uqam.ca/limitedinteraction)
@@ -24,24 +30,6 @@ is installed) while waiting for user action.
       [API](https://felixchenier.uqam.ca/limitedinteraction/api.html)
 
 --------------------------------------------------------------------------------
-
-
-## Why another GUI module ##
-
-This module may interest people transitionning from Matlab to python, who miss
-Matlab's no-brainer ui functions such as msgbox, inputdlg, menu, etc. I could not find
-equivalent functions in the vast python ecosystem that are:
-
-- blocking when needed;
-- but still continue to refresh matplotlib when launched in an interactive
-  IPython session;
-- independent of the currently running IPython event loop.
-
-This module is designed to be a limited but extra-easy option to interact with
-a user without even thinking about what is a GUI. It has no dependencies and
-should work out of the box in any situation where the python interpreter is run
-locally. It is based on tkinter, but since it starts its own processes, it can
-be run conjointly with any other backend (Qt, wxWidgets, etc.).
 
 
 ## Installing ##
@@ -76,10 +64,10 @@ li.message('Please wait a few moments.',
 
 
 This is a non-blocking function. Any code after this call is executed
-immediately, while this message window stays in foreground.
+immediately, while this message window stays in foreground. To close the
+message window:
 
 ```python
-# Close the message window
 li.message('')
 ```
 
@@ -146,3 +134,15 @@ problems:
 
 - On Anaconda python on Linux, tkinter fonts are very ugly. It still works, but it looks
   ancient.
+
+
+## Credits ##
+
+This module is developed by Félix Chénier at the Mobility and Adaptive
+Sports Research Lab (https://felixchenier.uqam.ca).
+
+It includes artwork developed by these designers:
+
+- Warning and gear icons: [Laura Reen](https://www.iconfinder.com/laurareen)
+- Question mark icon: [Design Revision](https://www.iconfinder.com/DesignRevision)
+- All other icons: [Recep Kütük](https://www.iconfinder.com/recepkutuk)
