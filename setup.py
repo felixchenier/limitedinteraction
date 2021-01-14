@@ -9,7 +9,7 @@ with open("limitedinteraction/VERSION", "r") as fh:
 setuptools.setup(
     name='limitedinteraction',
     version=version,
-    description="Simple GUI dialogs that refresh Matplotlib's event loop in background.",
+    description="Simple dialog windows for scripters and scientists.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://felixchenier.uqam.ca/limitedinteraction/',

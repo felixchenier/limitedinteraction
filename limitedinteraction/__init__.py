@@ -333,15 +333,8 @@ def get_filename(initial_folder: str = '.', **kwargs) -> str:
         **kwargs)
 
 
-def __dir__():
-    return ['message', 'input_dialog', 'button_dialog', 'get_folder', 'get_filename']
-
-
-#--- Check that the cmd module will respond well when asked.
-_launch_subprocess(function='import')
-
-
-if __name__ == '__main__':
+def run_tests():
+    """Run interactive tests."""
     # Running this script launches the interactive test/demo."
     choice = button_dialog(
         "Now we will run Limited Interaction's tests.",
@@ -358,7 +351,6 @@ if __name__ == '__main__':
             raise ValueError('You should not see this error.')
         except ValueError:
             pass  # all is ok
-
 
         try:
             something = button_dialog(left=0, right=0)
@@ -416,3 +408,7 @@ if __name__ == '__main__':
         assert choice == 0
 
         button_dialog('Test completed.', ['OK'])
+
+
+def __dir__():
+    return ['message', 'input_dialog', 'button_dialog', 'get_folder', 'get_filename']

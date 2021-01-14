@@ -16,7 +16,7 @@
 # limitations under the License.
 
 """
-Implements limitedinteraction functions.
+Implements Limited Interaction functions.
 
 This file is not to be included as a module but instead called as a separate
 process by limitedinteraction/__init__.py.
@@ -32,9 +32,13 @@ __email__ = "chenier.felix@uqam.ca"
 __license__ = "Apache 2.0"
 
 
-
 #---- Main imports
 import json
+import sys
+from functools import partial
+import time
+import os
+import platform
 import sys
 
 
@@ -63,13 +67,6 @@ except ModuleNotFoundError:
             "GUI toolkit."))
 
 
-from functools import partial
-import time
-import os
-import platform
-import sys
-
-
 is_pc = True if platform.system() == 'Windows' else False
 is_mac = True if platform.system() == 'Darwin' else False
 is_linux = True if platform.system() == 'Linux' else False
@@ -82,13 +79,13 @@ def get_window_geometry(root):
     geometry = root.geometry()
 
     size = geometry[:geometry.find('+')]
-    position = geometry[geometry.find('+')+1:]
+    position = geometry[geometry.find('+') + 1:]
 
     width = int(size[:size.find('x')])
-    height = int(size[geometry.find('x')+1:])
+    height = int(size[geometry.find('x') + 1:])
 
     left = int(position[:position.find('+')])
-    top = int(position[position.find('+')+1:])
+    top = int(position[position.find('+') + 1:])
 
     return (width, height, left, top)
 
