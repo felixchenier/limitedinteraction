@@ -71,6 +71,7 @@ from threading import Thread
 import subprocess
 import warnings
 from typing import Sequence, Union, List
+import limitedinteraction.cmd as cmd
 
 
 # Set some constants
@@ -115,7 +116,16 @@ def _define_polling_pause():
         import matplotlib.pyplot as plt
         def polling_pause():
             """Pause while refreshing Matplotlib while waiting for user."""
-            plt.pause(0.2)
+            # This rewrite of Matplotlib pause was found here:
+            # https://stackoverflow.com/questions/45729092/make-interactive-matplotlib-window-not-pop-to-front-on-each-update-windows-7/45734500#45734500
+            manager = plt._pylab_helpers.Gcf.get_active()
+            if manager is not None:
+                canvas = manager.canvas
+                if canvas.figure.stale:
+                    canvas.draw_idle()
+                canvas.start_event_loop(0.2)
+            else:
+                time.sleep(0.2)
 
     else:
         def polling_pause():
@@ -130,7 +140,7 @@ def _launch_subprocess(blocking=True, debug=False, **kwargs):
     output = [None]
     command_call = [
         sys.executable,  # python3
-        my_path + '/cmd.py',  # cmd.py
+        cmd.__file__,  # cmd.py
         json.dumps(kwargs)]
 
     if debug:
