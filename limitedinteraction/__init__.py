@@ -275,7 +275,7 @@ def input_dialog(
     message
         Optional. Instruction to show to the user.
     labels
-        Optional. List of str: abels for each input.
+        Optional. List of str: labels for each input.
     initial_values
         Optional. List of str: initial values for each input.
     masked
