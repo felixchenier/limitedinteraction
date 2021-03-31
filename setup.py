@@ -16,7 +16,7 @@ setuptools.setup(
     author='Félix Chénier',
     author_email='chenier.felix@uqam.ca',
     license='Apache',
-	license_files=['LICENSE'],
+	license_files=['LICENSE.txt'],
     packages=setuptools.find_packages(),
     package_data={
         'limitedinteraction': ['VERSION', 'images/*.png']},

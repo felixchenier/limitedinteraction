@@ -124,18 +124,6 @@ window:
 folder = li.get_folder()
 ```
 
-## Known issues ##
-
-If you are using *macOS Mojave* or *Anaconda python on Linux*, you may have these
-problems:
-
-- On macOS Mojave, tkinter is known to be seriously broken. If you use a Mac, please use
-  any other OS version than Mojave.
-
-- On Anaconda python on Linux, tkinter fonts are very ugly. It still works, but it looks
-  ancient.
-
-
 ## Credits ##
 
 This module is developed by Félix Chénier at the Mobility and Adaptive
