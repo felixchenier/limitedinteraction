@@ -81,24 +81,35 @@ is_linux = True if platform.system() == 'Linux' else False
 my_path = os.path.dirname(os.path.abspath(__file__))
 
 # Temporary folder
-try:
-    if is_pc and 'TEMP' in os.environ:
-        _base_temp_folder = os.environ['TEMP']
-        _temp_folder = _base_temp_folder + '/limitedinteraction'
-    elif is_mac and 'TMPDIR' in os.environ:
-        _base_temp_folder = os.environ['TMPDIR']
-        _temp_folder = _base_temp_folder + '/limitedinteraction'
-    else:
-        _temp_folder = os.environ['HOME'] + '/.limitedinteraction'
-
+def _try_folder(folder: str) -> bool:
+    """Try this folder for write access as a temporary folder."""
     try:
-        os.mkdir(_temp_folder)
+        os.mkdir(folder)
     except FileExistsError:
         pass
+    except Exception:
+        return False
 
-except Exception:
-    warnings.warn('Could not set temporary folder.')
-    _temp_folder = '.'
+    return True
+
+
+try_list = []
+
+if is_pc and "TEMP" in os.environ:
+    try_list.append(os.environ["TEMP"] + "/limitedinteraction")
+if is_mac and "TMPDIR" in os.environ:
+    try_list.append(os.environ["TMPDIR"] + "/limitedinteraction")
+if "HOME" in os.environ:
+    try_list.append(os.environ["HOME"] + "/.limitedinteraction")
+# Last try
+try_list.append(".")
+
+for _temp_folder in try_list:
+    if _try_folder(_temp_folder):
+        break
+
+if _temp_folder == ".":
+    warnings.warn("Could not set temporary folder.")
 
 # Set some state variables
 _message_window_int = [0]
