@@ -4,3 +4,4 @@ limitedinteraction.egg-info
 limitedinteraction/__pycache__
 environment.pickle
 .buildinfo
+__pycache__
