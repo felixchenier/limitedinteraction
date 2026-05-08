@@ -127,7 +127,7 @@ folder = li.get_folder()
 ## Credits ##
 
 This module is developed by Félix Chénier at the Mobility and Adaptive
-Sports Research Lab (https://felixchenier.uqam.ca).
+Systems Research Lab (https://felixchenier.uqam.ca).
 
 It includes artwork developed by these designers:
 
